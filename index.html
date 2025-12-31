@@ -27,413 +27,894 @@
     <script src="https://assets.codepen.io/16327/Physics2DPlugin3.min.js"></script>
 
     <style>
-        :root {
-          --bg-romance: linear-gradient(135deg, #ffdde1 0%, #ee9ca7 100%);
-          --bg-night: #151522;
-          --card-bg: #ffffff;
-          --primary-red: #d6336c;
-          --gold: #ffd700;
-        }
+      :root {
+        --bg-romance: linear-gradient(135deg, #ffdde1 0%, #ee9ca7 100%);
+        --bg-night: #151522;
+        --card-bg: #ffffff;
+        --primary-red: #d6336c;
+        --gold: #ffd700;
+      }
 
-        body, html {
-          width: 100%;
-          height: 100%;
-          margin: 0;
-          padding: 0;
-          overflow: hidden;
-          font-family: "Comfortaa", cursive;
-          background-color: var(--bg-night);
-        }
+      body,
+      html {
+        width: 100%;
+        height: 100%;
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+        font-family: "Comfortaa", cursive;
+        background-color: var(--bg-night);
+      }
 
-        #app {
-          width: 100%;
-          height: 100%;
-          position: relative;
-        }
+      #app {
+        width: 100%;
+        height: 100%;
+        position: relative;
+      }
 
-        /* --- ГИРЛЯНДА (Существующие стили) --- */
-        .lightrope {
-          text-align: center;
-          white-space: nowrap;
-          overflow: hidden;
-          position: fixed;
-          top: 13px;
-          z-index: 50;
-          margin: -15px 0 0 0;
-          padding: 0;
-          pointer-events: none;
-          width: 100%;
-        }
-        .lightrope li {
-          position: relative;
-          animation-fill-mode: both;
-          animation-iteration-count: infinite;
-          list-style: none;
-          margin: 0;
-          padding: 0;
-          display: inline-block;
-          width: 12px;
-          height: 28px;
-          border-radius: 50%;
-          margin: 20px;
+      /* --- ГИРЛЯНДА (Существующие стили) --- */
+      .lightrope {
+        text-align: center;
+        white-space: nowrap;
+        overflow: hidden;
+        position: fixed;
+        top: 13px;
+        z-index: 50;
+        margin: -15px 0 0 0;
+        padding: 0;
+        pointer-events: none;
+        width: 100%;
+      }
+      .lightrope li {
+        position: relative;
+        animation-fill-mode: both;
+        animation-iteration-count: infinite;
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        display: inline-block;
+        width: 12px;
+        height: 28px;
+        border-radius: 50%;
+        margin: 20px;
+        background: rgba(0, 247, 165, 1);
+        box-shadow: 0px 4.67px 24px 3px rgba(0, 247, 165, 1);
+        animation-name: flash-1;
+        animation-duration: 2s;
+      }
+      .lightrope li:nth-child(2n + 1) {
+        background: rgba(0, 255, 255, 1);
+        box-shadow: 0px 4.67px 24px 3px rgba(0, 255, 255, 0.5);
+        animation-name: flash-2;
+        animation-duration: 0.4s;
+      }
+      .lightrope li:nth-child(4n + 2) {
+        background: rgba(247, 0, 148, 1);
+        box-shadow: 0px 4.67px 24px 3px rgba(247, 0, 148, 1);
+        animation-name: flash-3;
+        animation-duration: 1.1s;
+      }
+      .lightrope li:nth-child(odd) {
+        animation-duration: 1.8s;
+      }
+      .lightrope li:nth-child(3n + 1) {
+        animation-duration: 1.4s;
+      }
+      .lightrope li:before {
+        content: "";
+        position: absolute;
+        background: #222;
+        width: 10px;
+        height: 9.33px;
+        border-radius: 3px;
+        top: -4.67px;
+        left: 1px;
+      }
+      .lightrope li:after {
+        content: "";
+        top: -14px;
+        left: 9px;
+        position: absolute;
+        width: 52px;
+        height: 18.67px;
+        border-bottom: solid #222 2px;
+        border-radius: 50%;
+      }
+      .lightrope li:last-child:after {
+        content: none;
+      }
+      .lightrope li:first-child {
+        margin-left: -40px;
+      }
+      @keyframes flash-1 {
+        0%,
+        100% {
           background: rgba(0, 247, 165, 1);
           box-shadow: 0px 4.67px 24px 3px rgba(0, 247, 165, 1);
-          animation-name: flash-1;
-          animation-duration: 2s;
         }
-        .lightrope li:nth-child(2n + 1) {
+        50% {
+          background: rgba(0, 247, 165, 0.4);
+          box-shadow: 0px 4.67px 24px 3px rgba(0, 247, 165, 0.2);
+        }
+      }
+      @keyframes flash-2 {
+        0%,
+        100% {
           background: rgba(0, 255, 255, 1);
-          box-shadow: 0px 4.67px 24px 3px rgba(0, 255, 255, 0.5);
-          animation-name: flash-2;
-          animation-duration: 0.4s;
+          box-shadow: 0px 4.67px 24px 3px rgba(0, 255, 255, 1);
         }
-        .lightrope li:nth-child(4n + 2) {
+        50% {
+          background: rgba(0, 255, 255, 0.4);
+          box-shadow: 0px 4.67px 24px 3px rgba(0, 255, 255, 0.2);
+        }
+      }
+      @keyframes flash-3 {
+        0%,
+        100% {
           background: rgba(247, 0, 148, 1);
           box-shadow: 0px 4.67px 24px 3px rgba(247, 0, 148, 1);
-          animation-name: flash-3;
-          animation-duration: 1.1s;
         }
-        .lightrope li:nth-child(odd) { animation-duration: 1.8s; }
-        .lightrope li:nth-child(3n + 1) { animation-duration: 1.4s; }
-        .lightrope li:before {
-          content: ""; position: absolute; background: #222; width: 10px; height: 9.33px; border-radius: 3px; top: -4.67px; left: 1px;
+        50% {
+          background: rgba(247, 0, 148, 0.4);
+          box-shadow: 0px 4.67px 24px 3px rgba(247, 0, 148, 0.2);
         }
-        .lightrope li:after {
-          content: ""; top: -14px; left: 9px; position: absolute; width: 52px; height: 18.67px; border-bottom: solid #222 2px; border-radius: 50%;
-        }
-        .lightrope li:last-child:after { content: none; }
-        .lightrope li:first-child { margin-left: -40px; }
-        @keyframes flash-1 { 0%, 100% { background: rgba(0, 247, 165, 1); box-shadow: 0px 4.67px 24px 3px rgba(0, 247, 165, 1); } 50% { background: rgba(0, 247, 165, 0.4); box-shadow: 0px 4.67px 24px 3px rgba(0, 247, 165, 0.2); } }
-        @keyframes flash-2 { 0%, 100% { background: rgba(0, 255, 255, 1); box-shadow: 0px 4.67px 24px 3px rgba(0, 255, 255, 1); } 50% { background: rgba(0, 255, 255, 0.4); box-shadow: 0px 4.67px 24px 3px rgba(0, 255, 255, 0.2); } }
-        @keyframes flash-3 { 0%, 100% { background: rgba(247, 0, 148, 1); box-shadow: 0px 4.67px 24px 3px rgba(247, 0, 148, 1); } 50% { background: rgba(247, 0, 148, 0.4); box-shadow: 0px 4.67px 24px 3px rgba(247, 0, 148, 0.2); } }
+      }
 
-        /* --- ЭКРАНЫ --- */
-        .screen {
-          position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-          display: none; flex-direction: column; align-items: center; justify-content: center;
-          opacity: 0; transition: opacity 0.5s ease;
-        }
-        .screen.active { display: flex; opacity: 1; }
+      /* --- ЭКРАНЫ --- */
+      .screen {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        display: none;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        opacity: 0;
+        transition: opacity 0.5s ease;
+      }
+      .screen.active {
+        display: flex;
+        opacity: 1;
+      }
 
-        /* ЭКРАН 1: Приветствие */
-        #screen-welcome { background: var(--bg-romance); text-align: center; }
-        .photos-container { position: relative; width: 250px; height: 250px; margin-bottom: 40px; animation: float 6s ease-in-out infinite; }
-        .photo-wrapper { position: absolute; width: 120px; height: 120px; border-radius: 50%; overflow: hidden; border: 4px solid #fff; box-shadow: 0 0 15px rgba(255, 255, 255, 0.8); }
-        .photo-nik { top: 0; left: 0; z-index: 1; animation: orbit1 8s linear infinite; }
-        .photo-liza { bottom: 0; right: 0; z-index: 2; animation: orbit2 8s linear infinite; }
-        .photo-wrapper img { width: 100%; height: 100%; object-fit: cover; }
-        @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-15px); } }
-        @keyframes orbit1 { 0% { transform: scale(1) rotate(0deg); } 50% { transform: scale(1.1) rotate(5deg); } 100% { transform: scale(1) rotate(0deg); } }
-        @keyframes orbit2 { 0% { transform: scale(1) rotate(0deg); } 50% { transform: scale(1.1) rotate(-5deg); } 100% { transform: scale(1) rotate(0deg); } }
-        .gift-container { cursor: pointer; margin-bottom: 20px; position: relative; }
-        .gift-img { width: 180px; height: auto; animation: shake-jump 2s cubic-bezier(0.36, 0.07, 0.19, 0.97) infinite; }
-        @keyframes shake-jump { 10%, 90% { transform: translate3d(-1px, 0, 0); } 20%, 80% { transform: translate3d(2px, 0, 0); } 30%, 50%, 70% { transform: translate3d(-4px, -10px, 0) rotate(-2deg); } 40%, 60% { transform: translate3d(4px, 0, 0) rotate(2deg); } }
-        .title-text { font-family: "Great Vibes", cursive; font-size: 3rem; color: #d6336c; margin: 0; text-shadow: 2px 2px 4px rgba(255, 255, 255, 0.5); }
-        .subtitle-text { font-size: 1rem; color: #fff; background: rgba(214, 51, 108, 0.4); padding: 5px 15px; border-radius: 20px; margin-top: 10px; animation: pulse 1.5s infinite; }
-        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.05); } 100% { transform: scale(1); } }
+      /* ЭКРАН 1: Приветствие */
+      #screen-welcome {
+        background: var(--bg-romance);
+        text-align: center;
+      }
+      .photos-container {
+        position: relative;
+        width: 350px;
+        height: 250px;
+        margin-bottom: 40px;
+        animation: float 6s ease-in-out infinite;
+      }
+      .photo-wrapper {
+        position: absolute;
+        width: 180px;
+        height: 180px;
+        border-radius: 50%;
+        overflow: hidden;
+        border: 4px solid #fff;
+        box-shadow: 0 0 15px rgba(255, 255, 255, 0.8);
+      }
+      .photo-nik {
+        top: 0;
+        left: 0;
+        z-index: 1;
+        animation: orbit1 8s linear infinite;
+      }
+      .photo-liza {
+        bottom: 0;
+        right: 0;
+        z-index: 2;
+        animation: orbit2 8s linear infinite;
+      }
+      .photo-wrapper img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+      @keyframes float {
+        0%,
+        100% {
+          transform: translateY(0);
+        }
+        50% {
+          transform: translateY(-15px);
+        }
+      }
+      @keyframes orbit1 {
+        0% {
+          transform: scale(1) rotate(0deg);
+        }
+        50% {
+          transform: scale(1.1) rotate(5deg);
+        }
+        100% {
+          transform: scale(1) rotate(0deg);
+        }
+      }
+      @keyframes orbit2 {
+        0% {
+          transform: scale(1) rotate(0deg);
+        }
+        50% {
+          transform: scale(1.1) rotate(-5deg);
+        }
+        100% {
+          transform: scale(1) rotate(0deg);
+        }
+      }
+      .gift-container {
+        cursor: pointer;
+        margin-bottom: 20px;
+        position: relative;
+      }
+      .gift-img {
+        width: 180px;
+        height: auto;
+        animation: shake-jump 2s cubic-bezier(0.36, 0.07, 0.19, 0.97) infinite;
+      }
+      @keyframes shake-jump {
+        10%,
+        90% {
+          transform: translate3d(-1px, 0, 0);
+        }
+        20%,
+        80% {
+          transform: translate3d(2px, 0, 0);
+        }
+        30%,
+        50%,
+        70% {
+          transform: translate3d(-4px, -10px, 0) rotate(-2deg);
+        }
+        40%,
+        60% {
+          transform: translate3d(4px, 0, 0) rotate(2deg);
+        }
+      }
+      .title-text {
+        font-family: "Great Vibes", cursive;
+        font-size: 3rem;
+        color: #d6336c;
+        margin: 0;
+        text-shadow: 2px 2px 4px rgba(255, 255, 255, 0.5);
+      }
+      .subtitle-text {
+        font-size: 1rem;
+        color: #fff;
+        background: rgba(214, 51, 108, 0.4);
+        padding: 5px 15px;
+        border-radius: 20px;
+        margin-top: 10px;
+        animation: pulse 1.5s infinite;
+      }
+      @keyframes pulse {
+        0% {
+          transform: scale(1);
+        }
+        50% {
+          transform: scale(1.05);
+        }
+        100% {
+          transform: scale(1);
+        }
+      }
 
-        /* ЭКРАН 2: Елка */
-        #screen-greeting { background-color: var(--bg-night); }
-        #tree-svg { width: 133%; height: 81%; max-height: 500px; visibility: hidden; transform: translateY(-50px); }
-        .greeting-content { z-index: 10; text-align: center; position: absolute; bottom: 50px; width: 100%; }
-        .greeting-text { font-family: "Pacifico", cursive; color: #fff; font-size: 1.8rem; margin-bottom: 20px; text-shadow: 0 0 10px #ff0000; }
-        .btn-magic { background: linear-gradient(45deg, #ff0000, #ff7300); color: white; border: none; padding: 15px 30px; font-size: 1rem; border-radius: 30px; font-family: "Comfortaa", cursive; font-weight: bold; box-shadow: 0 4px 15px rgba(255, 69, 0, 0.5); transition: transform 0.2s; outline: none; }
-        .btn-magic:active { transform: scale(0.95); }
-        .sparkle { mix-blend-mode: luminosity; }
+      /* ЭКРАН 2: Елка */
+      #screen-greeting {
+        background-color: var(--bg-night);
+      }
+      #tree-svg {
+        width: 133%;
+        height: 81%;
+        max-height: 500px;
+        visibility: hidden;
+        transform: translateY(-50px);
+      }
+      .greeting-content {
+        z-index: 10;
+        text-align: center;
+        position: absolute;
+        bottom: 50px;
+        width: 100%;
+      }
+      .greeting-text {
+        font-family: "Pacifico", cursive;
+        color: #fff;
+        font-size: 1.7rem;
+        margin: 0 20px 20px 20px;
+        text-shadow: 0 0 10px #ff0000;
+      }
+      .btn-magic {
+        background: linear-gradient(45deg, #ff0000, #ff7300);
+        color: white;
+        border: none;
+        padding: 15px 30px;
+        font-size: 1rem;
+        border-radius: 30px;
+        font-family: "Comfortaa", cursive;
+        font-weight: bold;
+        box-shadow: 0 4px 15px rgba(255, 69, 0, 0.5);
+        transition: transform 0.2s;
+        outline: none;
+      }
+      .btn-magic:active {
+        transform: scale(0.95);
+      }
+      .sparkle {
+        mix-blend-mode: luminosity;
+      }
 
-        /* --- НОВЫЕ СТИЛИ (ЭКРАН 3 и 4) --- */
+      /* --- НОВЫЕ СТИЛИ (ЭКРАН 3 и 4) --- */
 
-        /* ЭКРАН 3: Викторина */
-        #screen-quiz {
-            background-color: var(--bg-night);
-            perspective: 1000px;
-            overflow: hidden;
-        }
+      /* ЭКРАН 3: Викторина */
+      #screen-quiz {
+        background-color: var(--bg-night);
+        perspective: 1000px;
+        overflow: hidden;
+      }
 
-        .quiz-stack {
-            position: relative;
-            width: 90%;
-            max-width: 400px;
-            height: 65vh;
-            margin-top: 30px;
-        }
+      .quiz-stack {
+        position: relative;
+        width: 90%;
+        max-width: 400px;
+        height: 65vh;
+        margin-top: 30px;
+      }
 
-        .quiz-card {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: #fff;
-            border-radius: 20px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
-            transition: transform 0.6s cubic-bezier(0.23, 1, 0.32, 1);
-            transform-origin: center bottom;
-        }
+      /* Центрируем стек карточек и гарантируем, что карточки не будут шире */
+      .quiz-stack {
+        margin: 30px auto; /* центр по горизонтали */
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
 
-        /* Выпирание и наклон карточек */
-        .quiz-card:nth-child(1) { z-index: 3; transform: rotate(0deg) translateY(0); }
-        .quiz-card:nth-child(2) { z-index: 2; transform: rotate(3deg) translateY(10px) scale(0.98); opacity: 0.9; }
-        .quiz-card:nth-child(3) { z-index: 1; transform: rotate(-3deg) translateY(20px) scale(0.96); opacity: 0.8; }
+      .quiz-card {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: #fff;
+        border-radius: 20px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+        /* Убираем CSS-переходы чтобы GSAP управлял анимациями (во избежание конфликтов) */
+        transition: none;
+        transform-origin: center bottom;
+      }
 
-        .quiz-card.swapped {
-            /* Класс для анимации улетания */
-            transform: translateX(120%) rotate(20deg) !important;
-            opacity: 0;
-        }
+      /* Гарантируем, что каждая карточка не вылезет за max-width стека */
+      .quiz-card {
+        box-sizing: border-box;
+        max-width: 400px;
+        margin: 0 auto;
+      }
 
-        /* Чередование контента (верх/низ или лево/право для адаптивности внутри flex column) */
-        .card-content {
-            display: flex;
-            flex-direction: column;
-            height: 100%;
-        }
-        
-        /* Чередование стилей для четных/нечетных вопросов */
-        .quiz-card[data-layout="reverse"] .card-content {
-            flex-direction: column-reverse;
-        }
+      /* Выпирание и наклон карточек (стандартные позиции для визуального стека)
+         Позиции задаются CSS-правилами для первичных состояний; динамические
+         пересчёты происходят в JS через GSAP, чтобы получить пружинный эффект. */
+      .quiz-card:nth-child(1) {
+        z-index: 3;
+        transform: rotate(0deg) translateY(0) scale(1);
+        opacity: 1;
+      }
+      .quiz-card:nth-child(2) {
+        z-index: 2;
+        transform: rotate(3deg) translateY(10px) scale(0.98);
+        opacity: 0.95;
+      }
+      .quiz-card:nth-child(3) {
+        z-index: 1;
+        transform: rotate(-3deg) translateY(20px) scale(0.96);
+        opacity: 0.85;
+      }
 
-        .card-img {
-            flex: 1;
-            width: 100%;
-            overflow: hidden;
-            position: relative;
-        }
-        .card-img img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
+      .quiz-card.swapped {
+        /* Этот класс всё ещё можно использовать как мгновенную пометку; анимация
+           теперь выполняется через GSAP, чтобы дать контролируемый эффект вылета */
+        opacity: 0;
+      }
 
-        .card-body {
-            flex: 1.2;
-            padding: 15px;
-            background: #fff;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-        }
+      /* Декоративные обёртки (паттерны подарочной упаковки) */
+      .quiz-card::before {
+        content: "";
+        position: absolute;
+        top: -6px;
+        left: -6px;
+        right: -6px;
+        bottom: -6px;
+        z-index: -1;
+        border-radius: 26px;
+        pointer-events: none;
+        background-repeat: repeat;
+        background-size: auto;
+        background-position: center;
+        mix-blend-mode: multiply;
+        opacity: 0.95;
+      }
 
-        .question-text {
-            font-size: 1.1rem;
-            color: #333;
-            font-weight: 700;
-            margin-bottom: 15px;
-            line-height: 1.3;
-        }
+      /* Pattern 1: полосатая лента */
+      .quiz-card.pattern-1::before {
+        background-image: repeating-linear-gradient(
+            90deg,
+            firebrick,
+            firebrick 20px,
+            beige 0,
+            beige 25px,
+            forestgreen 0,
+            forestgreen 35px,
+            gold 0,
+            gold 40px,
+            crimson 0,
+            crimson 60px
+          ),
+          repeating-linear-gradient(
+            firebrick,
+            firebrick 20px,
+            beige 0,
+            beige 25px,
+            forestgreen 0,
+            forestgreen 35px,
+            gold 0,
+            gold 40px,
+            crimson 0,
+            crimson 60px
+          );
+        background-blend-mode: multiply;
+      }
 
-        .options {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
+      /* Pattern 2: горошек/пуговицы */
+      .quiz-card.pattern-2::before {
+        background-image: radial-gradient(
+            transparent 0,
+            transparent 20px,
+            #dc143c 0,
+            #dc143c 25px,
+            transparent 0,
+            transparent 100%
+          ),
+          radial-gradient(
+            transparent 0,
+            transparent 20px,
+            #dc143c 0,
+            #dc143c 25px,
+            transparent 0,
+            transparent 100%
+          ),
+          radial-gradient(
+            transparent 0,
+            transparent 20px,
+            #3cb371 0,
+            #3cb371 25px,
+            transparent 0,
+            transparent 100%
+          ),
+          radial-gradient(
+            transparent 0,
+            transparent 20px,
+            #3cb371 0,
+            #3cb371 25px,
+            transparent 0,
+            transparent 100%
+          ),
+          linen;
+        background-blend-mode: multiply;
+        background-size: 80px 80px;
+        background-position: 40px 40px, 40px 0, 0 0, 0 40px;
+      }
 
-        .option-btn {
-            background: #f0f0f0;
-            border: 2px solid #ddd;
-            padding: 10px;
-            border-radius: 12px;
-            text-align: left;
-            font-size: 0.9rem;
-            color: #444;
-            transition: 0.2s;
-        }
-        .option-btn.correct { background: #d4edda; border-color: #c3e6cb; color: #155724; }
-        .option-btn.wrong { background: #f8d7da; border-color: #f5c6cb; color: #721c24; }
+      /* Pattern 3: диагональные элементы */
+      .quiz-card.pattern-3::before {
+        background-image: repeating-linear-gradient(
+            to top left,
+            wheat 0,
+            wheat 20px,
+            transparent 0,
+            transparent 40px,
+            #228b22 0,
+            #228b22 60px
+          ),
+          repeating-linear-gradient(
+            to left,
+            crimson 0,
+            crimson 20px,
+            wheat 0,
+            wheat 40px,
+            #228b22 0,
+            #228b22 60px
+          ),
+          beige;
+        background-blend-mode: multiply;
+      }
 
-        /* Модалка с фактом */
-        .fact-overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.85);
-            z-index: 10;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-            box-sizing: border-box;
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity 0.3s;
-            text-align: center;
-            color: #fff;
-            border-radius: 20px; /* Совпадает с карточкой */
-        }
-        .fact-overlay.active {
-            opacity: 1;
-            pointer-events: all;
-        }
-        .fact-title { color: #ffd700; font-size: 1.2rem; margin-bottom: 10px; font-weight: bold; }
-        .fact-text { font-size: 0.95rem; line-height: 1.5; margin-bottom: 20px; }
-        .next-btn {
-            background: var(--primary-red);
-            color: white;
-            padding: 10px 25px;
-            border-radius: 20px;
-            border: none;
-            font-weight: bold;
-        }
+      /* Чередование контента (верх/низ или лево/право для адаптивности внутри flex column) */
+      .card-content {
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+      }
 
-        /* ЭКРАН 4: Финал и подарки */
-        #screen-final {
-            background-color: var(--bg-night);
-            color: #fff;
-        }
+      /* Чередование стилей для четных/нечетных вопросов */
+      .quiz-card[data-layout="reverse"] .card-content {
+        flex-direction: column-reverse;
+      }
 
-        /* Загрузка */
-        .analysis-container {
-            width: 80%;
-            text-align: center;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-        .loading-bar-wrapper {
-            width: 100%;
-            height: 20px;
-            background: rgba(255,255,255,0.2);
-            border-radius: 10px;
-            overflow: visible; /* Чтобы линия вылетела */
-            position: relative;
-            margin: 20px 0;
-        }
-        .loading-bar {
-            width: 0%;
-            height: 100%;
-            background: linear-gradient(90deg, #ff0000, #ff7300);
-            border-radius: 10px;
-            position: relative;
-        }
-        /* Анимация переполнения */
-        .loading-bar.burst {
-            width: 9999% !important; /* Вырывается за пределы */
-            transition: width 2s cubic-bezier(0.1, 0.7, 1.0, 0.1);
-        }
-        .percent-text {
-            font-size: 3rem;
-            font-family: 'Ruslan Display', cursive;
-            color: var(--gold);
-        }
-        .analysis-text { font-size: 1.1rem; margin-bottom: 10px; }
+      .card-img {
+        /* Занимает доступное пространство, центрирует изображение */
+        flex: 1 1 auto;
+        width: 100%;
+        overflow: hidden;
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 8px;
+        box-sizing: border-box;
+        background: #fafafa;
+      }
+      .card-img img {
+        /* Гарантируем, что картинка полностью помещается: */
+        max-width: 100%;
+        max-height: 100%;
+        width: auto;
+        height: auto;
+        object-fit: contain;
+        display: block;
+      }
 
-        /* Подарочная карточка 3D */
-        .gift-reveal-container {
-            display: none; /* Скрыто до конца загрузки */
-            width: 85%;
-            height: 60vh;
-            perspective: 1000px;
-            flex-direction: column;
-            align-items: center;
-        }
+      .card-body {
+        /* Текстовая часть не должна вытеснять изображение — занимает только нужный размер */
+        flex: 0 0 auto;
+        padding: 15px;
+        background: #fff;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+      }
 
-        .gift-card-3d {
-            width: 100%;
-            height: 100%;
-            position: relative;
-            transform-style: preserve-3d;
-            transition: transform 1.2s cubic-bezier(0.4, 0.2, 0.2, 1);
-            cursor: pointer;
-        }
+      .question-text {
+        font-size: 1.1rem;
+        color: #333;
+        font-weight: 700;
+        margin-bottom: 15px;
+        line-height: 1.3;
+      }
 
-        .gift-card-3d.flipped {
-            transform: rotateY(180deg);
-        }
+      .options {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
 
-        .card-face {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            backface-visibility: hidden;
-            border-radius: 15px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
-        }
+      .option-btn {
+        background: linear-gradient(135deg, #fff8f0 0%, #ffecec 100%);
+        border: 2px solid #ffd700;
+        padding: 12px 14px;
+        border-radius: 14px;
+        text-align: left;
+        font-size: 0.95rem;
+        color: #2b2b2b;
+        transition: transform 0.18s ease, box-shadow 0.18s ease;
+        box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08),
+          inset 0 -4px 0 rgba(0, 0, 0, 0.02);
+        position: relative;
+        overflow: hidden;
+      }
+      .option-btn:hover {
+        transform: translateY(-3px) scale(1.01);
+        box-shadow: 0 10px 22px rgba(0, 0, 0, 0.12);
+      }
+      .option-btn::after {
+        content: "";
+        position: absolute;
+        right: 10px;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 28px;
+        height: 28px;
+        background: radial-gradient(
+          circle at 30% 30%,
+          #fff 0%,
+          rgba(255, 255, 255, 0) 40%
+        );
+        border-radius: 50%;
+        opacity: 0.6;
+      }
+      .option-btn.correct {
+        background: linear-gradient(135deg, #e6f9ea 0%, #d4edda 100%);
+        border-color: #9fe0a8;
+        color: #0b5f2b;
+      }
+      .option-btn.wrong {
+        background: linear-gradient(135deg, #fdecea 0%, #f8d7da 100%);
+        border-color: #f6b2b8;
+        color: #7a2126;
+      }
 
-        .face-front {
-            background: linear-gradient(135deg, #fff 0%, #f0f0f0 100%);
-            flex-direction: column;
-            padding: 20px;
-            text-align: center;
-            border: 4px solid var(--primary-red);
-        }
+      /* Модалка с фактом */
+      .fact-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.85);
+        z-index: 10;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        padding: 20px;
+        box-sizing: border-box;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.3s;
+        text-align: center;
+        color: #fff;
+        border-radius: 20px; /* Совпадает с карточкой */
+      }
+      .fact-answer {
+        font-size: 1.8rem;
+        font-weight: 800;
+        margin-bottom: 12px;
+        color: #fff;
+        text-shadow: 0 2px 6px rgba(0, 0, 0, 0.6);
+      }
+      .fact-overlay.active {
+        opacity: 1;
+        pointer-events: all;
+      }
+      .fact-title {
+        color: #ffd700;
+        font-size: 1.2rem;
+        margin-bottom: 10px;
+        font-weight: bold;
+      }
+      .fact-text {
+        font-size: 0.95rem;
+        line-height: 1.5;
+        margin-bottom: 20px;
+      }
+      .next-btn {
+        background: var(--primary-red);
+        color: white;
+        padding: 10px 25px;
+        border-radius: 20px;
+        border: none;
+        font-weight: bold;
+      }
 
-        .face-back {
-            background: #fff;
-            transform: rotateY(180deg);
-            padding: 10px;
-        }
-        
-        .face-back img {
-            width: 100%;
-            height: 100%;
-            object-fit: contain;
-            border-radius: 10px;
-        }
+      /* ЭКРАН 4: Финал и подарки */
+      #screen-final {
+        background-color: var(--bg-night);
+        color: #fff;
+      }
 
-        .gift-msg {
-            color: var(--primary-red);
-            font-family: 'Great Vibes', cursive;
-            font-size: 2.5rem;
-            margin-bottom: 15px;
-        }
-        .tap-hint {
-            color: #555;
-            font-size: 0.9rem;
-            animation: pulse 2s infinite;
-        }
+      /* Final screen wrapper: растянуть по всей ширине и центрировать содержимое */
+      .final-wrapper {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+        box-sizing: border-box;
+      }
 
-        /* Кнопка "Еще не все" */
-        .more-gifts-btn {
-            margin-top: 25px;
-            background: var(--gold);
-            color: #333;
-            border: none;
-            padding: 12px 24px;
-            border-radius: 30px;
-            font-weight: bold;
-            font-size: 1.1rem;
-            box-shadow: 0 0 15px rgba(255, 215, 0, 0.6);
-            display: none; /* Появится после переворота */
-            opacity: 0;
-            transition: opacity 0.5s;
-        }
+      /* Внутренняя карточка с ограничением ширины */
+      .final-card {
+        width: 100%;
+        max-width: 360px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 20px;
+      }
 
-        /* ПЕРЕХОД (TRANSITION OVERLAY) */
-        #transition-overlay {
-          position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-          background: linear-gradient(to bottom, #fff, #e3f2fd);
-          z-index: 999; transform: translateY(-100%); display: flex; align-items: center; justify-content: center; pointer-events: none;
-        }
-        .snow-transition { font-family: "Mountains of Christmas", cursive; font-size: 2rem; color: #a2cbdc; }
+      /* Загрузка */
+      .analysis-container {
+        width: 80%;
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+      .loading-bar-wrapper {
+        width: 100%;
+        height: 20px;
+        background: rgba(255, 255, 255, 0.2);
+        border-radius: 10px;
+        overflow: visible; /* Чтобы линия вылетела */
+        position: relative;
+        margin: 20px 0;
+      }
+      .loading-bar {
+        width: 0%;
+        height: 100%;
+        background: linear-gradient(90deg, #ff0000, #ff7300);
+        border-radius: 10px;
+        position: relative;
+      }
+      /* Анимация переполнения */
+      .loading-bar.burst {
+        width: 9999% !important; /* Вырывается за пределы */
+        transition: width 2s cubic-bezier(0.1, 0.7, 1, 0.1);
+      }
+      .percent-text {
+        font-size: 3rem;
+        font-family: "Ruslan Display", cursive;
+        color: var(--gold);
+      }
+      .analysis-text {
+        font-size: 1.1rem;
+        margin-bottom: 10px;
+      }
 
+      /* Подарочная карточка 3D */
+      .gift-reveal-container {
+        display: none; /* Скрыто до конца загрузки */
+        width: 85%;
+        height: 60vh;
+        perspective: 1000px;
+        flex-direction: column;
+        align-items: center;
+      }
+
+      /* Ограничим ширину 3D-карточки и центрируем её внутри контейнера */
+      .gift-card-3d {
+        max-width: 420px;
+        margin: 0 auto;
+      }
+
+      .gift-card-3d {
+        width: 100%;
+        height: 100%;
+        position: relative;
+        transform-style: preserve-3d;
+        transition: transform 1.2s cubic-bezier(0.4, 0.2, 0.2, 1);
+        cursor: pointer;
+      }
+
+      .gift-card-3d.flipped {
+        transform: rotateY(180deg);
+      }
+
+      .card-face {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        backface-visibility: hidden;
+        border-radius: 15px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+      }
+
+      .face-front {
+        background: linear-gradient(135deg, #fff 0%, #f0f0f0 100%);
+        flex-direction: column;
+        padding: 20px;
+        text-align: center;
+        border: 4px solid var(--primary-red);
+      }
+
+      .face-back {
+        background: #fff;
+        transform: rotateY(180deg);
+        padding: 10px;
+      }
+
+      .face-back img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+        border-radius: 10px;
+      }
+
+      .gift-msg {
+        color: var(--primary-red);
+        font-family: "Great Vibes", cursive;
+        font-size: 2.5rem;
+        margin-bottom: 15px;
+      }
+      .tap-hint {
+        color: #555;
+        font-size: 0.9rem;
+        animation: pulse 2s infinite;
+      }
+
+      /* Кнопка "Еще не все" */
+      .more-gifts-btn {
+        margin-top: 25px;
+        background: var(--gold);
+        color: #333;
+        border: none;
+        padding: 12px 24px;
+        border-radius: 30px;
+        font-weight: bold;
+        font-size: 1.1rem;
+        box-shadow: 0 0 15px rgba(255, 215, 0, 0.6);
+        display: none; /* Появится после переворота */
+        opacity: 0;
+        transition: opacity 0.5s;
+        transform: translateY(34px);
+      }
+
+      /* ПЕРЕХОД (TRANSITION OVERLAY) */
+      #transition-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(to bottom, #fff, #e3f2fd);
+        z-index: 999;
+        transform: translateY(-100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        pointer-events: none;
+      }
+      .snow-transition {
+        font-family: "Mountains of Christmas", cursive;
+        font-size: 2rem;
+        color: #a2cbdc;
+      }
     </style>
   </head>
   <body>
     <div id="app">
       <!-- Гирлянда -->
       <ul class="lightrope">
-        <li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li>
-        <li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
       </ul>
 
       <!-- ЭКРАН 1: Приветствие -->
       <div id="screen-welcome" class="screen active">
         <div class="photos-container">
           <div class="photo-wrapper photo-nik">
-            <img src="nik.png" alt="Никита" onerror="this.src='https://placehold.co/120x120?text=Nik'" />
+            <img
+              src="nik.png"
+              alt="Никита"
+              onerror="this.src='https://placehold.co/120x120?text=Nik'"
+            />
           </div>
           <div class="photo-wrapper photo-liza">
-            <img src="liza.png" alt="Лиза" onerror="this.src='https://placehold.co/120x120?text=Liza'" />
+            <img
+              src="liza.png"
+              alt="Лиза"
+              onerror="this.src='https://placehold.co/120x120?text=Liza'"
+            />
           </div>
         </div>
         <div class="gift-container" onclick="handleGiftClick()">
@@ -446,75 +927,177 @@
       <!-- ЭКРАН 2: Поздравление и Елка -->
       <div id="screen-greeting" class="screen">
         <!-- SVG Code preserved from original -->
-        <svg id="tree-svg" class="mainSVG" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600">
+        <svg
+          id="tree-svg"
+          class="mainSVG"
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 800 600"
+        >
           <defs>
-            <radialGradient id="dotGrad" cx="0" cy="0" r="50" gradientUnits="userSpaceOnUse">
+            <radialGradient
+              id="dotGrad"
+              cx="0"
+              cy="0"
+              r="50"
+              gradientUnits="userSpaceOnUse"
+            >
               <stop offset="0" style="stop-color: #ffffff; stop-opacity: 1" />
-              <stop offset="0.1" style="stop-color: #0867c7; stop-opacity: 0.6" />
+              <stop
+                offset="0.1"
+                style="stop-color: #0867c7; stop-opacity: 0.6"
+              />
               <stop offset="1" style="stop-color: #081029; stop-opacity: 0" />
             </radialGradient>
-            <mask id="treePathMask"><path class="treePathMask" fill="none" stroke-width="18" stroke="#FFF" d="M252.9,447.9c0,0-30.8-21.6,33.9-44.7c64.7-23.1,46.2-37,33.9-41.6c-12.3-4.6-59.3-11.6-42.4-28.5s114-52.4,81.7-66.2c-32.4-13.9-58.5-10.8-35.4-29.3s66.2-101.7,70.9-115.6c4.4-13.2,16.9-18.5,24.7,0c7.7,18.5,44.7,100.1,67.8,115.6c23.1,15.4-10.8,21.6-26.2,24.7c-15.4,3.1-20,33.9,33.9,49.3c53.9,15.4,47.8,40.1,27.7,44.7c-20,4.6-63.2,4.6-27.7,32.4s98.6,21.6,61.6,60.1"/></mask>
-            <mask id="treeBottomMask"><path class="treeBottomMask" stroke="#FFF" stroke-width="8" d="M207.5,484.1c0,0,58.5-43.1,211.1-3.1s191-16.9,191-16.9"/></mask>
-            <mask id="treePotMask"><path class="treePotMask" stroke="#FFF" stroke-width="8" d="M374.3,502.5c0,0-4.6,20,7.7,29.3c12.3,9.2,40.1,7.7,50.8,0s10.8-23.1,10.8-29.3"/></mask>
+            <mask id="treePathMask">
+              <path
+                class="treePathMask"
+                fill="none"
+                stroke-width="18"
+                stroke="#FFF"
+                d="M252.9,447.9c0,0-30.8-21.6,33.9-44.7c64.7-23.1,46.2-37,33.9-41.6c-12.3-4.6-59.3-11.6-42.4-28.5s114-52.4,81.7-66.2c-32.4-13.9-58.5-10.8-35.4-29.3s66.2-101.7,70.9-115.6c4.4-13.2,16.9-18.5,24.7,0c7.7,18.5,44.7,100.1,67.8,115.6c23.1,15.4-10.8,21.6-26.2,24.7c-15.4,3.1-20,33.9,33.9,49.3c53.9,15.4,47.8,40.1,27.7,44.7c-20,4.6-63.2,4.6-27.7,32.4s98.6,21.6,61.6,60.1"
+              />
+            </mask>
+            <mask id="treeBottomMask">
+              <path
+                class="treeBottomMask"
+                stroke="#FFF"
+                stroke-width="8"
+                d="M207.5,484.1c0,0,58.5-43.1,211.1-3.1s191-16.9,191-16.9"
+              />
+            </mask>
+            <mask id="treePotMask">
+              <path
+                class="treePotMask"
+                stroke="#FFF"
+                stroke-width="8"
+                d="M374.3,502.5c0,0-4.6,20,7.7,29.3c12.3,9.2,40.1,7.7,50.8,0s10.8-23.1,10.8-29.3"
+              />
+            </mask>
           </defs>
           <g class="whole">
             <g class="pContainer"></g>
             <g class="tree" mask="url(#treePathMask)">
-              <path d="M252.95,447.85a20.43,20.43,0,0,1-5.64-6.24,14,14,0,0,1-1.91-8.22,16.93,16.93,0,0,1,3.06-8,33.16,33.16,0,0,1,5.79-6.28A74.78,74.78,0,0,1,268.54,410a163.48,163.48,0,0,1,15.52-6.84c10.54-3.93,21-8.07,30.72-13.46a80.83,80.83,0,0,0,7-4.37,37.51,37.51,0,0,0,6.13-5.24c1.75-1.92,3.14-4.18,3.25-6.35s-1.12-4.18-3-5.81a25,25,0,0,0-6.72-3.91,61.25,61.25,0,0,0-7.8-2.42c-5.41-1.4-10.91-2.72-16.38-4.32a84.17,84.17,0,0,1-16.2-6.19,28.26,28.26,0,0,1-3.86-2.5,15.06,15.06,0,0,1-3.44-3.63,9,9,0,0,1-1.51-5.47,10.22,10.22,0,0,1,.61-2.78,12.88,12.88,0,0,1,1.2-2.34,26.73,26.73,0,0,1,6.58-6.56c2.35-1.76,4.76-3.33,7.19-4.84,4.87-3,9.82-5.75,14.77-8.46,9.91-5.4,19.88-10.59,29.63-16.08,4.87-2.75,9.68-5.56,14.33-8.56A81.88,81.88,0,0,0,359.45,280a23,23,0,0,0,2.41-2.79,8.36,8.36,0,0,0,1.35-2.65,2.13,2.13,0,0,0-.17-1.7,5.53,5.53,0,0,0-1.88-1.77,13.15,13.15,0,0,0-1.49-.83c-.52-.26-1.1-.49-1.76-.77-1.27-.53-2.55-1-3.83-1.53q-3.86-1.48-7.8-2.77c-5.26-1.74-10.6-3.23-16-4.79-2.72-.79-5.47-1.58-8.29-2.61a31.74,31.74,0,0,1-4.33-1.92,14.39,14.39,0,0,1-2.29-1.53,8.74,8.74,0,0,1-2.22-2.66,7.2,7.2,0,0,1-.78-4,9.09,9.09,0,0,1,1-3.24,18.93,18.93,0,0,1,3-4.21,44.88,44.88,0,0,1,3.29-3.19c.56-.5,1.12-1,1.68-1.45l1.61-1.33a84,84,0,0,0,10.88-11.88,326.2,326.2,0,0,0,18.79-27.53c5.88-9.5,11.48-19.19,16.89-29S380.1,146.16,385,136.13c1.22-2.51,2.42-5,3.57-7.54s2.29-5.09,3.14-7.45l.36-1c.14-.38.26-.75.42-1.12.29-.75.64-1.48,1-2.21a25.51,25.51,0,0,1,2.65-4.21,19.15,19.15,0,0,1,3.76-3.69,13.74,13.74,0,0,1,5.24-2.42,12.11,12.11,0,0,1,6.12.25,14.59,14.59,0,0,1,5,2.79,20.59,20.59,0,0,1,3.47,3.79,30.33,30.33,0,0,1,2.5,4.1c.35.7.7,1.39,1,2.1l.46,1.05.4,1,1.64,3.84,3.39,7.67q6.88,15.32,14.36,30.37c5,10,10.18,19.94,15.69,29.65a274.94,274.94,0,0,0,17.9,28A73.36,73.36,0,0,0,487.74,233c.49.4,1,.8,1.48,1.15l1.7,1.19a35,35,0,0,1,3.66,3,17.84,17.84,0,0,1,3.32,4.08,10.83,10.83,0,0,1,1.14,2.94,8.54,8.54,0,0,1,0,3.54,10.27,10.27,0,0,1-3.22,5.39,20.71,20.71,0,0,1-4.15,2.91,49,49,0,0,1-8.4,3.46,154,154,0,0,1-16.77,4.09l-4.15.81a9.18,9.18,0,0,0-2.87,1.08,9.51,9.51,0,0,0-4,4.7,12.55,12.55,0,0,0-.67,6.58,19.5,19.5,0,0,0,2.46,6.74A37.19,37.19,0,0,0,468,295.75a75,75,0,0,0,14.14,7.86,129.67,129.67,0,0,0,15.58,5.49A141.4,141.4,0,0,1,513.88,315a75,75,0,0,1,15.19,8.65,37.29,37.29,0,0,1,6.55,6.24,21.05,21.05,0,0,1,4.31,8.49,14.43,14.43,0,0,1-1.24,9.88,18.08,18.08,0,0,1-6.66,6.94,26.74,26.74,0,0,1-8.56,3.33c-2.84.61-5.65,1.06-8.44,1.49-5.58.86-11.13,1.61-16.52,2.77a53.48,53.48,0,0,0-7.81,2.22c-2.43.94-4.81,2.22-6,3.93a4.34,4.34,0,0,0-.77,2.82,8.45,8.45,0,0,0,1,3.29,28,28,0,0,0,4.82,6.25,80.74,80.74,0,0,0,12.81,10.4c9.29,6,19.72,10.29,30.24,14.17,5.27,1.95,10.59,3.79,15.85,5.86,2.63,1,5.24,2.14,7.79,3.39a37.94,37.94,0,0,1,7.28,4.51,11.9,11.9,0,0,1,3.63,15.57,34.68,34.68,0,0,1-4.53,7.16,77.45,77.45,0,0,1-5.64,6.29,77.31,77.31,0,0,0,5.41-6.46,34.27,34.27,0,0,0,4.22-7.21,12.64,12.64,0,0,0,.88-8,12.44,12.44,0,0,0-4.71-6.43,37.71,37.71,0,0,0-7.15-4.16c-2.53-1.16-5.13-2.18-7.76-3.14-5.26-1.91-10.62-3.62-16-5.44-10.65-3.63-21.34-7.64-31.11-13.64a83.84,83.84,0,0,1-13.61-10.49,31.27,31.27,0,0,1-5.6-6.94,12,12,0,0,1-1.55-4.68,8.17,8.17,0,0,1,.19-2.7,8.56,8.56,0,0,1,1.09-2.5,12.1,12.1,0,0,1,3.6-3.44,24.27,24.27,0,0,1,4.08-2.08,57.3,57.3,0,0,1,8.36-2.56c5.59-1.31,11.19-2.17,16.71-3.12,2.76-.48,5.5-1,8.15-1.59a22.1,22.1,0,0,0,7-2.87,13.3,13.3,0,0,0,4.82-5.15,9.42,9.42,0,0,0,.69-6.53,16,16,0,0,0-3.42-6.33,33.25,33.25,0,0,0-5.73-5.27,69.74,69.74,0,0,0-14.19-7.8,135.81,135.81,0,0,0-15.61-5.42,135.53,135.53,0,0,1-16.3-5.51,81,81,0,0,1-15.41-8.31,43.39,43.39,0,0,1-12.6-13,25.53,25.53,0,0,1-3.34-9,19.13,19.13,0,0,1,1-10,16.17,16.17,0,0,1,6.69-8,15.88,15.88,0,0,1,5-1.93l4.13-.84a147.75,147.75,0,0,0,16-4,42.41,42.41,0,0,0,7.17-3,14,14,0,0,0,2.74-1.92,3.42,3.42,0,0,0,1.12-1.68,2.41,2.41,0,0,0-.43-1.61,11.07,11.07,0,0,0-2-2.4,28,28,0,0,0-2.92-2.31l-1.76-1.22c-.65-.46-1.26-.94-1.86-1.43a59,59,0,0,1-6.43-6.27c-2-2.19-3.79-4.44-5.54-6.74a267,267,0,0,1-18.55-28.74c-5.63-9.85-10.89-19.86-16-30s-9.91-20.31-14.57-30.61l-3.45-7.76L417,124.48l-.42-1-.39-.88c-.25-.59-.54-1.15-.82-1.71a22.74,22.74,0,0,0-1.89-3.09,13,13,0,0,0-2.2-2.42,7,7,0,0,0-2.31-1.33,4.49,4.49,0,0,0-2.22-.09,8.55,8.55,0,0,0-4.59,3.32,17.85,17.85,0,0,0-1.84,2.92c-.26.54-.51,1.07-.73,1.64-.12.27-.22.56-.32.85l-.35,1c-1.06,2.93-2.23,5.47-3.42,8.1s-2.42,5.16-3.67,7.7c-5,10.18-10.29,20.16-15.77,30.05s-11.17,19.66-17.16,29.28a310.2,310.2,0,0,1-19.39,28.11,90.46,90.46,0,0,1-12,12.85l-1.65,1.35c-.52.43-1,.85-1.53,1.29a38,38,0,0,0-2.79,2.65,12.42,12.42,0,0,0-1.94,2.57,2.33,2.33,0,0,0-.28.76c0,.11,0,0,0,.09a4.57,4.57,0,0,0,1.7,1.35,25.15,25.15,0,0,0,3.36,1.51c2.46.92,5.11,1.72,7.79,2.52,5.36,1.58,10.84,3.16,16.25,5q4.06,1.37,8.08,2.94c1.34.53,2.67,1.07,4,1.63.64.27,1.36.57,2.1.94a19.66,19.66,0,0,1,2.18,1.24,11.85,11.85,0,0,1,4,4.13,8.64,8.64,0,0,1,1,3.24,9.11,9.11,0,0,1-.27,3.23,14.48,14.48,0,0,1-2.42,4.85,29.32,29.32,0,0,1-3.14,3.56,87.46,87.46,0,0,1-14,10.47c-4.85,3-9.79,5.84-14.76,8.55-9.94,5.42-20,10.49-29.91,15.72-5,2.62-9.88,5.28-14.63,8.12-2.37,1.42-4.7,2.89-6.88,4.46a22.06,22.06,0,0,0-5.45,5.14,8,8,0,0,0-.76,1.39,5.36,5.36,0,0,0-.33,1.32,4.1,4.1,0,0,0,.69,2.53,15.62,15.62,0,0,0,5.49,4.62A80.14,80.14,0,0,0,298.56,353c5.31,1.66,10.73,3.06,16.18,4.58a64.81,64.81,0,0,1,8.26,2.74,27.74,27.74,0,0,1,7.69,4.74,13.65,13.65,0,0,1,3,3.81,9.27,9.27,0,0,1,1,5,11.14,11.14,0,0,1-1.54,4.7,19.09,19.09,0,0,1-2.8,3.67,40.6,40.6,0,0,1-6.81,5.54,83.78,83.78,0,0,1-7.41,4.35c-10.11,5.26-20.76,9.16-31.39,12.82a161.69,161.69,0,0,0-15.52,6.37A74.57,74.57,0,0,0,255,420a32.17,32.17,0,0,0-5.82,5.89,16.21,16.21,0,0,0-3.19,7.52,13.61,13.61,0,0,0,1.59,8A20.29,20.29,0,0,0,252.95,447.85Z" fill="#cb9866"/>
-              <path d="M207.5,484.06c7.05-5.11,15.14-8.66,23.34-11.63a177.13,177.13,0,0,1,25.29-6.88,263.65,263.65,0,0,1,52.22-4.49h3.28l3.28.09,6.56.19,6.55.39c2.18.13,4.37.26,6.54.48,4.35.39,8.71.74,13,1.28l6.51.75,6.49.91c17.3,2.5,34.41,6,51.36,10.19l12.62,3.2c4.18,1,8.34,2.18,12.55,3.06,8.38,2,16.82,3.63,25.29,5.13a353.5,353.5,0,0,0,51.17,5.47c17.11.32,34.36-.66,51-4.7a118.55,118.55,0,0,0,24.21-8.47,84.82,84.82,0,0,0,11.11-6.49,47.55,47.55,0,0,0,9.69-8.53,48.1,48.1,0,0,1-9,9.45,85.1,85.1,0,0,1-10.81,7.45,116.56,116.56,0,0,1-24.23,10.24,165.66,165.66,0,0,1-25.79,5.35,232.1,232.1,0,0,1-26.27,1.71c-8.77,0-17.55-.24-26.26-1.09-2.18-.2-4.37-.35-6.54-.6l-6.52-.78c-4.36-.46-8.67-1.19-13-1.82-8.64-1.37-17.22-3.09-25.74-5-4.28-.87-8.5-2-12.75-3l-12.62-3.11q-25.06-6.37-50.58-10.47a426.37,426.37,0,0,0-51.3-5.3c-8.59-.42-17.19-.29-25.78,0a240.1,240.1,0,0,0-25.68,2.24,186.57,186.57,0,0,0-25.27,5.19c-4.15,1.16-8.26,2.49-12.28,4.05-2,.79-4,1.6-6,2.52A50.82,50.82,0,0,0,207.5,484.06Z" fill="#cb9866"/>
-              <path d="M374.32,502.55a48.15,48.15,0,0,0,1.24,14.35c1.15,4.52,3.29,8.64,6.49,11.35a18.5,18.5,0,0,0,5.51,3.14,39.06,39.06,0,0,0,6.41,1.82,65.78,65.78,0,0,0,13.68,1.12,72.9,72.9,0,0,0,13.72-1.44,44.51,44.51,0,0,0,6.46-1.85,17.75,17.75,0,0,0,5.51-3.15,25.45,25.45,0,0,0,7.24-11.17,52,52,0,0,0,1.9-6.91c.48-2.37.83-4.8,1.18-7.25a55.16,55.16,0,0,1,.64,7.42,40.11,40.11,0,0,1-.52,7.56,31.23,31.23,0,0,1-2.19,7.5,24.37,24.37,0,0,1-4.46,6.79,25.16,25.16,0,0,1-6.61,5,39.72,39.72,0,0,1-7.4,3A58.55,58.55,0,0,1,407.75,542a55,55,0,0,1-15.47-1.9,36.65,36.65,0,0,1-7.46-3,25.3,25.3,0,0,1-6.6-5,19.63,19.63,0,0,1-2.5-3.34,21.72,21.72,0,0,1-1.79-3.67,27.66,27.66,0,0,1-1.65-7.7,38.16,38.16,0,0,1,2-14.87Z" fill="#cb9866"/>
+              <path
+                d="M252.95,447.85a20.43,20.43,0,0,1-5.64-6.24,14,14,0,0,1-1.91-8.22,16.93,16.93,0,0,1,3.06-8,33.16,33.16,0,0,1,5.79-6.28A74.78,74.78,0,0,1,268.54,410a163.48,163.48,0,0,1,15.52-6.84c10.54-3.93,21-8.07,30.72-13.46a80.83,80.83,0,0,0,7-4.37,37.51,37.51,0,0,0,6.13-5.24c1.75-1.92,3.14-4.18,3.25-6.35s-1.12-4.18-3-5.81a25,25,0,0,0-6.72-3.91,61.25,61.25,0,0,0-7.8-2.42c-5.41-1.4-10.91-2.72-16.38-4.32a84.17,84.17,0,0,1-16.2-6.19,28.26,28.26,0,0,1-3.86-2.5,15.06,15.06,0,0,1-3.44-3.63,9,9,0,0,1-1.51-5.47,10.22,10.22,0,0,1,.61-2.78,12.88,12.88,0,0,1,1.2-2.34,26.73,26.73,0,0,1,6.58-6.56c2.35-1.76,4.76-3.33,7.19-4.84,4.87-3,9.82-5.75,14.77-8.46,9.91-5.4,19.88-10.59,29.63-16.08,4.87-2.75,9.68-5.56,14.33-8.56A81.88,81.88,0,0,0,359.45,280a23,23,0,0,0,2.41-2.79,8.36,8.36,0,0,0,1.35-2.65,2.13,2.13,0,0,0-.17-1.7,5.53,5.53,0,0,0-1.88-1.77,13.15,13.15,0,0,0-1.49-.83c-.52-.26-1.1-.49-1.76-.77-1.27-.53-2.55-1-3.83-1.53q-3.86-1.48-7.8-2.77c-5.26-1.74-10.6-3.23-16-4.79-2.72-.79-5.47-1.58-8.29-2.61a31.74,31.74,0,0,1-4.33-1.92,14.39,14.39,0,0,1-2.29-1.53,8.74,8.74,0,0,1-2.22-2.66,7.2,7.2,0,0,1-.78-4,9.09,9.09,0,0,1,1-3.24,18.93,18.93,0,0,1,3-4.21,44.88,44.88,0,0,1,3.29-3.19c.56-.5,1.12-1,1.68-1.45l1.61-1.33a84,84,0,0,0,10.88-11.88,326.2,326.2,0,0,0,18.79-27.53c5.88-9.5,11.48-19.19,16.89-29S380.1,146.16,385,136.13c1.22-2.51,2.42-5,3.57-7.54s2.29-5.09,3.14-7.45l.36-1c.14-.38.26-.75.42-1.12.29-.75.64-1.48,1-2.21a25.51,25.51,0,0,1,2.65-4.21,19.15,19.15,0,0,1,3.76-3.69,13.74,13.74,0,0,1,5.24-2.42,12.11,12.11,0,0,1,6.12.25,14.59,14.59,0,0,1,5,2.79,20.59,20.59,0,0,1,3.47,3.79,30.33,30.33,0,0,1,2.5,4.1c.35.7.7,1.39,1,2.1l.46,1.05.4,1,1.64,3.84,3.39,7.67q6.88,15.32,14.36,30.37c5,10,10.18,19.94,15.69,29.65a274.94,274.94,0,0,0,17.9,28A73.36,73.36,0,0,0,487.74,233c.49.4,1,.8,1.48,1.15l1.7,1.19a35,35,0,0,1,3.66,3,17.84,17.84,0,0,1,3.32,4.08,10.83,10.83,0,0,1,1.14,2.94,8.54,8.54,0,0,1,0,3.54,10.27,10.27,0,0,1-3.22,5.39,20.71,20.71,0,0,1-4.15,2.91,49,49,0,0,1-8.4,3.46,154,154,0,0,1-16.77,4.09l-4.15.81a9.18,9.18,0,0,0-2.87,1.08,9.51,9.51,0,0,0-4,4.7,12.55,12.55,0,0,0-.67,6.58,19.5,19.5,0,0,0,2.46,6.74A37.19,37.19,0,0,0,468,295.75a75,75,0,0,0,14.14,7.86,129.67,129.67,0,0,0,15.58,5.49A141.4,141.4,0,0,1,513.88,315a75,75,0,0,1,15.19,8.65,37.29,37.29,0,0,1,6.55,6.24,21.05,21.05,0,0,1,4.31,8.49,14.43,14.43,0,0,1-1.24,9.88,18.08,18.08,0,0,1-6.66,6.94,26.74,26.74,0,0,1-8.56,3.33c-2.84.61-5.65,1.06-8.44,1.49-5.58.86-11.13,1.61-16.52,2.77a53.48,53.48,0,0,0-7.81,2.22c-2.43.94-4.81,2.22-6,3.93a4.34,4.34,0,0,0-.77,2.82,8.45,8.45,0,0,0,1,3.29,28,28,0,0,0,4.82,6.25,80.74,80.74,0,0,0,12.81,10.4c9.29,6,19.72,10.29,30.24,14.17,5.27,1.95,10.59,3.79,15.85,5.86,2.63,1,5.24,2.14,7.79,3.39a37.94,37.94,0,0,1,7.28,4.51,11.9,11.9,0,0,1,3.63,15.57,34.68,34.68,0,0,1-4.53,7.16,77.45,77.45,0,0,1-5.64,6.29,77.31,77.31,0,0,0,5.41-6.46,34.27,34.27,0,0,0,4.22-7.21,12.64,12.64,0,0,0,.88-8,12.44,12.44,0,0,0-4.71-6.43,37.71,37.71,0,0,0-7.15-4.16c-2.53-1.16-5.13-2.18-7.76-3.14-5.26-1.91-10.62-3.62-16-5.44-10.65-3.63-21.34-7.64-31.11-13.64a83.84,83.84,0,0,1-13.61-10.49,31.27,31.27,0,0,1-5.6-6.94,12,12,0,0,1-1.55-4.68,8.17,8.17,0,0,1,.19-2.7,8.56,8.56,0,0,1,1.09-2.5,12.1,12.1,0,0,1,3.6-3.44,24.27,24.27,0,0,1,4.08-2.08,57.3,57.3,0,0,1,8.36-2.56c5.59-1.31,11.19-2.17,16.71-3.12,2.76-.48,5.5-1,8.15-1.59a22.1,22.1,0,0,0,7-2.87,13.3,13.3,0,0,0,4.82-5.15,9.42,9.42,0,0,0,.69-6.53,16,16,0,0,0-3.42-6.33,33.25,33.25,0,0,0-5.73-5.27,69.74,69.74,0,0,0-14.19-7.8,135.81,135.81,0,0,0-15.61-5.42,135.53,135.53,0,0,1-16.3-5.51,81,81,0,0,1-15.41-8.31,43.39,43.39,0,0,1-12.6-13,25.53,25.53,0,0,1-3.34-9,19.13,19.13,0,0,1,1-10,16.17,16.17,0,0,1,6.69-8,15.88,15.88,0,0,1,5-1.93l4.13-.84a147.75,147.75,0,0,0,16-4,42.41,42.41,0,0,0,7.17-3,14,14,0,0,0,2.74-1.92,3.42,3.42,0,0,0,1.12-1.68,2.41,2.41,0,0,0-.43-1.61,11.07,11.07,0,0,0-2-2.4,28,28,0,0,0-2.92-2.31l-1.76-1.22c-.65-.46-1.26-.94-1.86-1.43a59,59,0,0,1-6.43-6.27c-2-2.19-3.79-4.44-5.54-6.74a267,267,0,0,1-18.55-28.74c-5.63-9.85-10.89-19.86-16-30s-9.91-20.31-14.57-30.61l-3.45-7.76L417,124.48l-.42-1-.39-.88c-.25-.59-.54-1.15-.82-1.71a22.74,22.74,0,0,0-1.89-3.09,13,13,0,0,0-2.2-2.42,7,7,0,0,0-2.31-1.33,4.49,4.49,0,0,0-2.22-.09,8.55,8.55,0,0,0-4.59,3.32,17.85,17.85,0,0,0-1.84,2.92c-.26.54-.51,1.07-.73,1.64-.12.27-.22.56-.32.85l-.35,1c-1.06,2.93-2.23,5.47-3.42,8.1s-2.42,5.16-3.67,7.7c-5,10.18-10.29,20.16-15.77,30.05s-11.17,19.66-17.16,29.28a310.2,310.2,0,0,1-19.39,28.11,90.46,90.46,0,0,1-12,12.85l-1.65,1.35c-.52.43-1,.85-1.53,1.29a38,38,0,0,0-2.79,2.65,12.42,12.42,0,0,0-1.94,2.57,2.33,2.33,0,0,0-.28.76c0,.11,0,0,0,.09a4.57,4.57,0,0,0,1.7,1.35,25.15,25.15,0,0,0,3.36,1.51c2.46.92,5.11,1.72,7.79,2.52,5.36,1.58,10.84,3.16,16.25,5q4.06,1.37,8.08,2.94c1.34.53,2.67,1.07,4,1.63.64.27,1.36.57,2.1.94a19.66,19.66,0,0,1,2.18,1.24,11.85,11.85,0,0,1,4,4.13,8.64,8.64,0,0,1,1,3.24,9.11,9.11,0,0,1-.27,3.23,14.48,14.48,0,0,1-2.42,4.85,29.32,29.32,0,0,1-3.14,3.56,87.46,87.46,0,0,1-14,10.47c-4.85,3-9.79,5.84-14.76,8.55-9.94,5.42-20,10.49-29.91,15.72-5,2.62-9.88,5.28-14.63,8.12-2.37,1.42-4.7,2.89-6.88,4.46a22.06,22.06,0,0,0-5.45,5.14,8,8,0,0,0-.76,1.39,5.36,5.36,0,0,0-.33,1.32,4.1,4.1,0,0,0,.69,2.53,15.62,15.62,0,0,0,5.49,4.62A80.14,80.14,0,0,0,298.56,353c5.31,1.66,10.73,3.06,16.18,4.58a64.81,64.81,0,0,1,8.26,2.74,27.74,27.74,0,0,1,7.69,4.74,13.65,13.65,0,0,1,3,3.81,9.27,9.27,0,0,1,1,5,11.14,11.14,0,0,1-1.54,4.7,19.09,19.09,0,0,1-2.8,3.67,40.6,40.6,0,0,1-6.81,5.54,83.78,83.78,0,0,1-7.41,4.35c-10.11,5.26-20.76,9.16-31.39,12.82a161.69,161.69,0,0,0-15.52,6.37A74.57,74.57,0,0,0,255,420a32.17,32.17,0,0,0-5.82,5.89,16.21,16.21,0,0,0-3.19,7.52,13.61,13.61,0,0,0,1.59,8A20.29,20.29,0,0,0,252.95,447.85Z"
+                fill="#cb9866"
+              />
+              <path
+                d="M207.5,484.06c7.05-5.11,15.14-8.66,23.34-11.63a177.13,177.13,0,0,1,25.29-6.88,263.65,263.65,0,0,1,52.22-4.49h3.28l3.28.09,6.56.19,6.55.39c2.18.13,4.37.26,6.54.48,4.35.39,8.71.74,13,1.28l6.51.75,6.49.91c17.3,2.5,34.41,6,51.36,10.19l12.62,3.2c4.18,1,8.34,2.18,12.55,3.06,8.38,2,16.82,3.63,25.29,5.13a353.5,353.5,0,0,0,51.17,5.47c17.11.32,34.36-.66,51-4.7a118.55,118.55,0,0,0,24.21-8.47,84.82,84.82,0,0,0,11.11-6.49,47.55,47.55,0,0,0,9.69-8.53,48.1,48.1,0,0,1-9,9.45,85.1,85.1,0,0,1-10.81,7.45,116.56,116.56,0,0,1-24.23,10.24,165.66,165.66,0,0,1-25.79,5.35,232.1,232.1,0,0,1-26.27,1.71c-8.77,0-17.55-.24-26.26-1.09-2.18-.2-4.37-.35-6.54-.6l-6.52-.78c-4.36-.46-8.67-1.19-13-1.82-8.64-1.37-17.22-3.09-25.74-5-4.28-.87-8.5-2-12.75-3l-12.62-3.11q-25.06-6.37-50.58-10.47a426.37,426.37,0,0,0-51.3-5.3c-8.59-.42-17.19-.29-25.78,0a240.1,240.1,0,0,0-25.68,2.24,186.57,186.57,0,0,0-25.27,5.19c-4.15,1.16-8.26,2.49-12.28,4.05-2,.79-4,1.6-6,2.52A50.82,50.82,0,0,0,207.5,484.06Z"
+                fill="#cb9866"
+              />
+              <path
+                d="M374.32,502.55a48.15,48.15,0,0,0,1.24,14.35c1.15,4.52,3.29,8.64,6.49,11.35a18.5,18.5,0,0,0,5.51,3.14,39.06,39.06,0,0,0,6.41,1.82,65.78,65.78,0,0,0,13.68,1.12,72.9,72.9,0,0,0,13.72-1.44,44.51,44.51,0,0,0,6.46-1.85,17.75,17.75,0,0,0,5.51-3.15,25.45,25.45,0,0,0,7.24-11.17,52,52,0,0,0,1.9-6.91c.48-2.37.83-4.8,1.18-7.25a55.16,55.16,0,0,1,.64,7.42,40.11,40.11,0,0,1-.52,7.56,31.23,31.23,0,0,1-2.19,7.5,24.37,24.37,0,0,1-4.46,6.79,25.16,25.16,0,0,1-6.61,5,39.72,39.72,0,0,1-7.4,3A58.55,58.55,0,0,1,407.75,542a55,55,0,0,1-15.47-1.9,36.65,36.65,0,0,1-7.46-3,25.3,25.3,0,0,1-6.6-5,19.63,19.63,0,0,1-2.5-3.34,21.72,21.72,0,0,1-1.79-3.67,27.66,27.66,0,0,1-1.65-7.7,38.16,38.16,0,0,1,2-14.87Z"
+                fill="#cb9866"
+              />
             </g>
-            <path class="treeBottomPath" stroke="none" fill="none" stroke-width="8" d="M207.5,484.1c0,0,58.5-43.1,211.1-3.1s191-16.9,191-16.9"/>
-            <path class="treePath" fill="none" stroke="none" stroke-miterlimit="10" d="M252.95,447.85s-30.81-21.57,33.89-44.68,46.22-37,33.89-41.6-59.32-11.56-42.37-28.5,114-52.38,81.66-66.25S301.48,256,324.59,237.55,390.84,135.87,395.46,122c4.41-13.24,16.95-18.49,24.65,0s44.68,100.14,67.79,115.55-10.78,21.57-26.19,24.65-20,33.89,33.89,49.3,47.76,40.06,27.73,44.68-63.17,4.62-27.73,32.35,98.6,21.57,61.63,60.09"/>
-            <path class="treeBottom" mask="url(#treeBottomMask)" d="M207.5,484.06c7.05-5.11,15.14-8.66,23.34-11.63a177.13,177.13,0,0,1,25.29-6.88,263.65,263.65,0,0,1,52.22-4.49h3.28l3.28.09,6.56.19,6.55.39c2.18.13,4.37.26,6.54.48,4.35.39,8.71.74,13,1.28l6.51.75,6.49.91c17.3,2.5,34.41,6,51.36,10.19l12.62,3.2c4.18,1,8.34,2.18,12.55,3.06,8.38,2,16.82,3.63,25.29,5.13a353.5,353.5,0,0,0,51.17,5.47c17.11.32,34.36-.66,51-4.7a118.55,118.55,0,0,0,24.21-8.47,84.82,84.82,0,0,0,11.11-6.49,47.55,47.55,0,0,0,9.69-8.53,48.1,48.1,0,0,1-9,9.45,85.1,85.1,0,0,1-10.81,7.45,116.56,116.56,0,0,1-24.23,10.24,165.66,165.66,0,0,1-25.79,5.35,232.1,232.1,0,0,1-26.27,1.71c-8.77,0-17.55-.24-26.26-1.09-2.18-.2-4.37-.35-6.54-.6l-6.52-.78c-4.36-.46-8.67-1.19-13-1.82-8.64-1.37-17.22-3.09-25.74-5-4.28-.87-8.5-2-12.75-3l-12.62-3.11q-25.06-6.37-50.58-10.47a426.37,426.37,0,0,0-51.3-5.3c-8.59-.42-17.19-.29-25.78,0a240.1,240.1,0,0,0-25.68,2.24,186.57,186.57,0,0,0-25.27,5.19c-4.15,1.16-8.26,2.49-12.28,4.05-2,.79-4,1.6-6,2.52A50.82,50.82,0,0,0,207.5,484.06Z" fill="#cb9866"/>
-            <path class="treePot" mask="url(#treePotMask)" d="M374.32,502.55a48.15,48.15,0,0,0,1.24,14.35c1.15,4.52,3.29,8.64,6.49,11.35a18.5,18.5,0,0,0,5.51,3.14,39.06,39.06,0,0,0,6.41,1.82,65.78,65.78,0,0,0,13.68,1.12,72.9,72.9,0,0,0,13.72-1.44,44.51,44.51,0,0,0,6.46-1.85,17.75,17.75,0,0,0,5.51-3.15,25.45,25.45,0,0,0,7.24-11.17,52,52,0,0,0,1.9-6.91c.48-2.37.83-4.8,1.18-7.25a55.16,55.16,0,0,1,.64,7.42,40.11,40.11,0,0,1-.52,7.56,31.23,31.23,0,0,1-2.19,7.5,24.37,24.37,0,0,1-4.46,6.79,25.16,25.16,0,0,1-6.61,5,39.72,39.72,0,0,1-7.4,3A58.55,58.55,0,0,1,407.75,542a55,55,0,0,1-15.47-1.9,36.65,36.65,0,0,1-7.46-3,25.3,25.3,0,0,1-6.6-5,19.63,19.63,0,0,1-2.5-3.34,21.72,21.72,0,0,1-1.79-3.67,27.66,27.66,0,0,1-1.65-7.7,38.16,38.16,0,0,1,2-14.87Z" fill="#cb9866"/>
+            <path
+              class="treeBottomPath"
+              stroke="none"
+              fill="none"
+              stroke-width="8"
+              d="M207.5,484.1c0,0,58.5-43.1,211.1-3.1s191-16.9,191-16.9"
+            />
+            <path
+              class="treePath"
+              fill="none"
+              stroke="none"
+              stroke-miterlimit="10"
+              d="M252.95,447.85s-30.81-21.57,33.89-44.68,46.22-37,33.89-41.6-59.32-11.56-42.37-28.5,114-52.38,81.66-66.25S301.48,256,324.59,237.55,390.84,135.87,395.46,122c4.41-13.24,16.95-18.49,24.65,0s44.68,100.14,67.79,115.55-10.78,21.57-26.19,24.65-20,33.89,33.89,49.3,47.76,40.06,27.73,44.68-63.17,4.62-27.73,32.35,98.6,21.57,61.63,60.09"
+            />
+            <path
+              class="treeBottom"
+              mask="url(#treeBottomMask)"
+              d="M207.5,484.06c7.05-5.11,15.14-8.66,23.34-11.63a177.13,177.13,0,0,1,25.29-6.88,263.65,263.65,0,0,1,52.22-4.49h3.28l3.28.09,6.56.19,6.55.39c2.18.13,4.37.26,6.54.48,4.35.39,8.71.74,13,1.28l6.51.75,6.49.91c17.3,2.5,34.41,6,51.36,10.19l12.62,3.2c4.18,1,8.34,2.18,12.55,3.06,8.38,2,16.82,3.63,25.29,5.13a353.5,353.5,0,0,0,51.17,5.47c17.11.32,34.36-.66,51-4.7a118.55,118.55,0,0,0,24.21-8.47,84.82,84.82,0,0,0,11.11-6.49,47.55,47.55,0,0,0,9.69-8.53,48.1,48.1,0,0,1-9,9.45,85.1,85.1,0,0,1-10.81,7.45,116.56,116.56,0,0,1-24.23,10.24,165.66,165.66,0,0,1-25.79,5.35,232.1,232.1,0,0,1-26.27,1.71c-8.77,0-17.55-.24-26.26-1.09-2.18-.2-4.37-.35-6.54-.6l-6.52-.78c-4.36-.46-8.67-1.19-13-1.82-8.64-1.37-17.22-3.09-25.74-5-4.28-.87-8.5-2-12.75-3l-12.62-3.11q-25.06-6.37-50.58-10.47a426.37,426.37,0,0,0-51.3-5.3c-8.59-.42-17.19-.29-25.78,0a240.1,240.1,0,0,0-25.68,2.24,186.57,186.57,0,0,0-25.27,5.19c-4.15,1.16-8.26,2.49-12.28,4.05-2,.79-4,1.6-6,2.52A50.82,50.82,0,0,0,207.5,484.06Z"
+              fill="#cb9866"
+            />
+            <path
+              class="treePot"
+              mask="url(#treePotMask)"
+              d="M374.32,502.55a48.15,48.15,0,0,0,1.24,14.35c1.15,4.52,3.29,8.64,6.49,11.35a18.5,18.5,0,0,0,5.51,3.14,39.06,39.06,0,0,0,6.41,1.82,65.78,65.78,0,0,0,13.68,1.12,72.9,72.9,0,0,0,13.72-1.44,44.51,44.51,0,0,0,6.46-1.85,17.75,17.75,0,0,0,5.51-3.15,25.45,25.45,0,0,0,7.24-11.17,52,52,0,0,0,1.9-6.91c.48-2.37.83-4.8,1.18-7.25a55.16,55.16,0,0,1,.64,7.42,40.11,40.11,0,0,1-.52,7.56,31.23,31.23,0,0,1-2.19,7.5,24.37,24.37,0,0,1-4.46,6.79,25.16,25.16,0,0,1-6.61,5,39.72,39.72,0,0,1-7.4,3A58.55,58.55,0,0,1,407.75,542a55,55,0,0,1-15.47-1.9,36.65,36.65,0,0,1-7.46-3,25.3,25.3,0,0,1-6.6-5,19.63,19.63,0,0,1-2.5-3.34,21.72,21.72,0,0,1-1.79-3.67,27.66,27.66,0,0,1-1.65-7.7,38.16,38.16,0,0,1,2-14.87Z"
+              fill="#cb9866"
+            />
             <g class="treeStar">
-              <path class="treeStarOutline" opacity="0" d="M421,53.27c5,.83,10.08,1.52,15.15,2.13l3.8.45,1.9.21c.33,0,.6.06,1,.12a2.41,2.41,0,0,1,1.27.66,2.52,2.52,0,0,1,.56,2.76,3.42,3.42,0,0,1-.78,1.07l-.66.69-2.65,2.77c-1.78,1.83-3.54,3.68-5.35,5.48l-2.7,2.71L429.81,75l-.69.67-.34.33,0,0h0a.14.14,0,0,0,0-.08s0-.07,0,0l0,.24.07.47.57,3.78c.4,2.52.71,5,1.06,7.57l.94,7.59.22,1.9c0,.06,0,.19,0,.34a2.21,2.21,0,0,1,0,.43,2.72,2.72,0,0,1-.21.84,2.85,2.85,0,0,1-2.65,1.75,2.57,2.57,0,0,1-.82-.14,3.12,3.12,0,0,1-.65-.3l-1.64-1-6.58-3.91-6.63-3.81-3.34-1.86-.42-.23-.21-.12-.14-.07a1,1,0,0,0-.59,0,1.15,1.15,0,0,0-.31.12l-.43.22-.85.44c-2.27,1.17-4.54,2.31-6.79,3.52s-4.51,2.38-6.74,3.61l-3.36,1.83-.84.46a3.07,3.07,0,0,1-1.28.44,2.68,2.68,0,0,1-2.84-3l.15-1,.29-1.89.57-3.78,1.18-7.56,1.24-7.52a.13.13,0,0,0,0,.08l0,0-.1-.09-.17-.17-1.37-1.34-2.73-2.68-10.93-10.7-.34-.33a4,4,0,0,1-.64-.84,3.63,3.63,0,0,1-.43-2.12,3.68,3.68,0,0,1,2.64-3.17l.52-.11.25,0,.47-.06.95-.12,1.9-.25,7.58-1,7.6-.9,1.9-.23.95-.11c.24,0,.11,0,.09,0l-.09.05-.07.08,0,0,.09-.16.46-.84.91-1.68c2.41-4.5,4.95-8.92,7.51-13.34l1-1.66.48-.83.24-.41.13-.23a3.49,3.49,0,0,1,.22-.33,2.66,2.66,0,0,1,2.83-.9,2.52,2.52,0,0,1,1.26.84,2.85,2.85,0,0,1,.37.62l.18.44q1.45,3.54,3,7.06c1,2.36,2,4.68,3.06,7,.51,1.17,1.06,2.32,1.59,3.48l.8,1.74a2.12,2.12,0,0,0,.45.75A1.42,1.42,0,0,0,421,53.27Zm-.06.39a1.82,1.82,0,0,1-1-.46,2.52,2.52,0,0,1-.56-.86l-.84-1.72c-.56-1.14-1.11-2.3-1.69-3.43-1.17-2.27-2.29-4.56-3.5-6.81s-2.39-4.51-3.6-6.76l-.23-.42a.8.8,0,0,0-.14-.18.58.58,0,0,0-.33-.15.56.56,0,0,0-.57.28L407,36.48c-2.09,4.66-4.2,9.31-6.45,13.88l-.83,1.72-.42.86-.13.27a3.57,3.57,0,0,1-2,1.67,4.26,4.26,0,0,1-.84.18l-.95.13-1.89.27L386,56.53l-7.58,1-3.49.44a.45.45,0,0,0,.34-.4.51.51,0,0,0-.07-.28s-.06-.08-.07-.08l.33.34,10.65,11,2.66,2.75,1.33,1.37.4.42a3.41,3.41,0,0,1,.53.84,3.36,3.36,0,0,1,.24,1.95c-.53,2.56-1,5-1.57,7.52L388,90.85l-.83,3.73-.42,1.87-.2.9a.5.5,0,0,0,0,.3.58.58,0,0,0,.52.37,6.28,6.28,0,0,0,1.38-.58l3.46-1.62q3.47-1.61,6.9-3.3c2.3-1.1,4.57-2.26,6.85-3.39l.86-.43.43-.21a2.55,2.55,0,0,1,.57-.22,2.21,2.21,0,0,1,1.29.08l.29.13.21.11.42.23,3.37,1.81,6.8,3.51,6.85,3.41,1.71.85c.19.09.15.07.22.08a.25.25,0,0,0,.12,0,.42.42,0,0,0,.21-.1.33.33,0,0,0,.1-.19.2.2,0,0,0,0-.09.1.1,0,0,0,0,0l0-.13L428.74,96l-1.42-7.52c-.43-2.51-.9-5-1.29-7.54l-.6-3.78-.08-.47,0-.24a3.75,3.75,0,0,1,0-.45,3.37,3.37,0,0,1,.52-1.9,3.33,3.33,0,0,1,.3-.4,3.73,3.73,0,0,1,.3-.3l.35-.32.7-.65,2.81-2.59,2.86-2.54c1.9-1.71,3.84-3.36,5.77-5l2.91-2.49a12.91,12.91,0,0,0,1.15-1,.7.7,0,0,0-.06-.79.73.73,0,0,0-.37-.26c-.23-.06-.6-.13-.89-.2l-1.87-.4L436,56.39C431,55.39,426,54.45,420.95,53.66Z" fill="#FFFCF9"/>
-              <path d="M408.12,83.45l-17.78,8.94,3.72-19.55-14-14.15,19.74-2.5,9.13-17.68,8.48,18L437,59.73l-14.5,13.63,3,19.67Z" fill="#C89568"/>
+              <path
+                class="treeStarOutline"
+                opacity="0"
+                d="M421,53.27c5,.83,10.08,1.52,15.15,2.13l3.8.45,1.9.21c.33,0,.6.06,1,.12a2.41,2.41,0,0,1,1.27.66,2.52,2.52,0,0,1,.56,2.76,3.42,3.42,0,0,1-.78,1.07l-.66.69-2.65,2.77c-1.78,1.83-3.54,3.68-5.35,5.48l-2.7,2.71L429.81,75l-.69.67-.34.33,0,0h0a.14.14,0,0,0,0-.08s0-.07,0,0l0,.24.07.47.57,3.78c.4,2.52.71,5,1.06,7.57l.94,7.59.22,1.9c0,.06,0,.19,0,.34a2.21,2.21,0,0,1,0,.43,2.72,2.72,0,0,1-.21.84,2.85,2.85,0,0,1-2.65,1.75,2.57,2.57,0,0,1-.82-.14,3.12,3.12,0,0,1-.65-.3l-1.64-1-6.58-3.91-6.63-3.81-3.34-1.86-.42-.23-.21-.12-.14-.07a1,1,0,0,0-.59,0,1.15,1.15,0,0,0-.31.12l-.43.22-.85.44c-2.27,1.17-4.54,2.31-6.79,3.52s-4.51,2.38-6.74,3.61l-3.36,1.83-.84.46a3.07,3.07,0,0,1-1.28.44,2.68,2.68,0,0,1-2.84-3l.15-1,.29-1.89.57-3.78,1.18-7.56,1.24-7.52a.13.13,0,0,0,0,.08l0,0-.1-.09-.17-.17-1.37-1.34-2.73-2.68-10.93-10.7-.34-.33a4,4,0,0,1-.64-.84,3.63,3.63,0,0,1-.43-2.12,3.68,3.68,0,0,1,2.64-3.17l.52-.11.25,0,.47-.06.95-.12,1.9-.25,7.58-1,7.6-.9,1.9-.23.95-.11c.24,0,.11,0,.09,0l-.09.05-.07.08,0,0,.09-.16.46-.84.91-1.68c2.41-4.5,4.95-8.92,7.51-13.34l1-1.66.48-.83.24-.41.13-.23a3.49,3.49,0,0,1,.22-.33,2.66,2.66,0,0,1,2.83-.9,2.52,2.52,0,0,1,1.26.84,2.85,2.85,0,0,1,.37.62l.18.44q1.45,3.54,3,7.06c1,2.36,2,4.68,3.06,7,.51,1.17,1.06,2.32,1.59,3.48l.8,1.74a2.12,2.12,0,0,0,.45.75A1.42,1.42,0,0,0,421,53.27Zm-.06.39a1.82,1.82,0,0,1-1-.46,2.52,2.52,0,0,1-.56-.86l-.84-1.72c-.56-1.14-1.11-2.3-1.69-3.43-1.17-2.27-2.29-4.56-3.5-6.81s-2.39-4.51-3.6-6.76l-.23-.42a.8.8,0,0,0-.14-.18.58.58,0,0,0-.33-.15.56.56,0,0,0-.57.28L407,36.48c-2.09,4.66-4.2,9.31-6.45,13.88l-.83,1.72-.42.86-.13.27a3.57,3.57,0,0,1-2,1.67,4.26,4.26,0,0,1-.84.18l-.95.13-1.89.27L386,56.53l-7.58,1-3.49.44a.45.45,0,0,0,.34-.4.51.51,0,0,0-.07-.28s-.06-.08-.07-.08l.33.34,10.65,11,2.66,2.75,1.33,1.37.4.42a3.41,3.41,0,0,1,.53.84,3.36,3.36,0,0,1,.24,1.95c-.53,2.56-1,5-1.57,7.52L388,90.85l-.83,3.73-.42,1.87-.2.9a.5.5,0,0,0,0,.3.58.58,0,0,0,.52.37,6.28,6.28,0,0,0,1.38-.58l3.46-1.62q3.47-1.61,6.9-3.3c2.3-1.1,4.57-2.26,6.85-3.39l.86-.43.43-.21a2.55,2.55,0,0,1,.57-.22,2.21,2.21,0,0,1,1.29.08l.29.13.21.11.42.23,3.37,1.81,6.8,3.51,6.85,3.41,1.71.85c.19.09.15.07.22.08a.25.25,0,0,0,.12,0,.42.42,0,0,0,.21-.1.33.33,0,0,0,.1-.19.2.2,0,0,0,0-.09.1.1,0,0,0,0,0l0-.13L428.74,96l-1.42-7.52c-.43-2.51-.9-5-1.29-7.54l-.6-3.78-.08-.47,0-.24a3.75,3.75,0,0,1,0-.45,3.37,3.37,0,0,1,.52-1.9,3.33,3.33,0,0,1,.3-.4,3.73,3.73,0,0,1,.3-.3l.35-.32.7-.65,2.81-2.59,2.86-2.54c1.9-1.71,3.84-3.36,5.77-5l2.91-2.49a12.91,12.91,0,0,0,1.15-1,.7.7,0,0,0-.06-.79.73.73,0,0,0-.37-.26c-.23-.06-.6-.13-.89-.2l-1.87-.4L436,56.39C431,55.39,426,54.45,420.95,53.66Z"
+                fill="#FFFCF9"
+              />
+              <path
+                d="M408.12,83.45l-17.78,8.94,3.72-19.55-14-14.15,19.74-2.5,9.13-17.68,8.48,18L437,59.73l-14.5,13.63,3,19.67Z"
+                fill="#C89568"
+              />
             </g>
             <circle class="sparkle" fill="url(#dotGrad)" cx="0" cy="0" r="50" />
           </g>
         </svg>
         <div class="greeting-content">
-          <div class="greeting-text">Счастливого Нового Года, Лизочка!</div>
-          <button class="btn-magic" onclick="handleLastButton()">Вспомнить этот чудесный год</button>
+          <div class="greeting-text">
+            Желаю суперского Нового Года! <br />
+            Не передать словами как сильно я тебя люблю и обимаю💘
+          </div>
+          <button class="btn-magic" onclick="handleLastButton()">
+            Вспомнить этот чудесный год
+          </button>
         </div>
       </div>
 
       <!-- ЭКРАН 3: Викторина -->
       <div id="screen-quiz" class="screen">
         <div class="quiz-stack" id="quiz-stack">
-            <!-- Карточки генерируются JS -->
+          <!-- Карточки генерируются JS -->
         </div>
       </div>
 
       <!-- ЭКРАН 4: Финал (Анализ + Подарок) -->
       <div id="screen-final" class="screen">
-        <!-- 1. Анализ -->
-        <div class="analysis-container" id="analysis-container">
-            <div class="analysis-text">Анализирую все ответы...</div>
-            <div class="analysis-text">Определяю, насколько ты красивая...</div>
-            <div class="loading-bar-wrapper">
+        <div class="final-wrapper">
+          <div class="final-card">
+            <!-- 1. Анализ -->
+            <div class="analysis-container" id="analysis-container">
+              <div class="analysis-text">Анализирую все ответы...</div>
+              <div class="analysis-text">
+                Определяю, насколько ты красивая...
+              </div>
+              <div class="loading-bar-wrapper">
                 <div class="loading-bar" id="loading-bar"></div>
+              </div>
+              <div class="percent-text" id="percent-text">0%</div>
             </div>
-            <div class="percent-text" id="percent-text">0%</div>
-        </div>
 
-        <!-- 2. Подарок -->
-        <div class="gift-reveal-container" id="gift-reveal-container">
-            <div class="gift-card-3d" id="gift-card-3d" onclick="flipGiftCard()">
+            <!-- 2. Подарок -->
+            <div class="gift-reveal-container" id="gift-reveal-container">
+              <div
+                class="gift-card-3d"
+                id="gift-card-3d"
+                onclick="flipGiftCard()"
+              >
                 <div class="card-face face-front">
-                    <div class="gift-msg" id="gift-front-text">Я дарю тебе...</div>
-                    <div class="tap-hint">(нажми, чтобы перевернуть)</div>
+                  <div class="gift-msg" id="gift-front-text">
+                    Я дарю тебе...
+                  </div>
+                  <div class="tap-hint">(нажми, чтобы перевернуть)</div>
                 </div>
                 <div class="card-face face-back">
-                    <img id="gift-img" src="certificate1.png" alt="Сертификат 1" onerror="this.src='https://placehold.co/300x400?text=Gift+1'">
+                  <img
+                    id="gift-img"
+                    src="certificate1.png"
+                    alt="Сертификат 1"
+                    onerror="this.src='https://placehold.co/300x400?text=Gift+1'"
+                  />
                 </div>
+              </div>
+              <button
+                class="more-gifts-btn"
+                id="more-gifts-btn"
+                onclick="nextGift(event)"
+              >
+                А это еще не все!!
+              </button>
             </div>
-            <button class="more-gifts-btn" id="more-gifts-btn" onclick="nextGift(event)">А это еще не все!!</button>
+          </div>
         </div>
       </div>
-
     </div>
 
     <!-- ТРАНЗИШН (ПЕРЕХОД) -->
@@ -524,213 +1107,325 @@
 
     <script src="https://cdn.jsdelivr.net/gh/Alaev-Co/snowflakes/dist/Snow.min.js"></script>
     <script>
-        new Snow();
+      new Snow();
 
-        // === ДАННЫЕ ВИКТОРИНЫ ===
-        const quizData = [
-            {
-                img: 'q1.jpg',
-                question: 'Сколько минут за этот год мы с тобой проговорили по телефону?',
-                correct: 1, // Индекс правильного ответа
-                options: [
-                    'Как полёт на Луну и обратно',
-                    '10 дней, 1 час и 55 минут',
-                    'Ровно один оборот Земли',
-                    'Вечность в одном тарифе'
-                ],
-                fact: {
-                    title: '🔮 Магический факт:',
-                    text: 'Ученые выяснили, что именно голос любимого человека снижает уровень кортизола. Мы провели 241 час сеансов голосовой терапии!'
-                }
-            },
-            {
-                img: 'q2.jpg',
-                question: 'Сколько раз «люблю» звучало, словно новогодний колокольчик?',
-                correct: 1,
-                options: [
-                    '555 в смс и 777 вживую',
-                    '372 в чате и 999 в жизни',
-                    '1001 раз (сказка)',
-                    '444 в переписке и 888 наяву'
-                ],
-                fact: {
-                    title: '✨ Интересный факт:',
-                    text: 'Если пара произносит слова любви более 1000 раз в год, их отношения наполняются особой энергией. Мы план перевыполнили!'
-                }
-            },
-            {
-                img: 'q3.jpg',
-                question: 'Сколько счастливых моментов мы сохранили в наших общих фотографиях?',
-                correct: 2,
-                options: [
-                    '42 снимка',
-                    '99 фотографий',
-                    '67 совместных фото',
-                    '365 кадров'
-                ],
-                fact: {
-                    title: '🎄 А знали ли вы?',
-                    text: 'В новогодних традициях есть обычай делать фото ровно в полночь. Но у нас с тобой каждая фотография — как праздник!'
-                }
-            }
-        ];
+      // === ДАННЫЕ ВИКТОРИНЫ ===
+      const quizData = [
+        {
+          img: "q1.png",
+          question:
+            "Сколько времени за этот год мы с тобой проговорили по телефону?",
+          correct: 1, // Индекс правильного ответа
+          options: [
+            "490 минут",
+            "10 дней, 1 час и 55 минут",
+            "50 часов",
+            "Вечность в одном тарифе",
+          ],
+          fact: {
+            title: "🔮 Магический факт:",
+            text: "Ученые выяснили, что именно голос любимого человека снижает уровень кортизола. Мы провели с тобой 241 часов или (14 515 мин) сеансов голосовой терапии!",
+          },
+        },
+        {
+          img: "q2.png",
+          question:
+            "Сколько раз «люблю» звучало у нас, словно новогодний колокольчик?",
+          correct: 1,
+          options: [
+            "555 в смс и 777 вживую",
+            "372 в чате и 999 в жизни",
+            "1001 раз",
+            "444 в переписке и 888 наяву",
+          ],
+          fact: {
+            title: "✨ Интересный факт:",
+            text: "Если пара произносит слова любви более 1000 раз в год, их отношения наполняются особой энергией. Мы план перевыполнили!",
+          },
+        },
+        {
+          img: "q3.png",
+          question:
+            "Сколько счастливых моментов мы сохранили в наших общих фотографиях?",
+          correct: 2,
+          options: [
+            "42 снимка",
+            "99 фотографий",
+            "67 совместных фото",
+            "365 кадров",
+          ],
+          fact: {
+            title: "🎄 А знали ли вы?",
+            text: "В новогодних традициях многих стран существует обычай делать особую фотографию ровно в полночь — считается, что пары на таких снимках будут вместе весь следующий год. В Канаде и США влюбленные создают альбомы Год вместе, куда собирают все памятные моменты",
+          },
+        },
+      ];
 
-        let currentQuizIndex = 0;
+      let currentQuizIndex = 0;
 
-        // === ИНИЦИАЛИЗАЦИЯ ВИКТОРИНЫ ===
-        function initQuiz() {
-            const stack = document.getElementById('quiz-stack');
-            stack.innerHTML = '';
-            
-            // Создаем карточки в обратном порядке для z-index
-            [...quizData].reverse().forEach((q, reverseIndex) => {
-                const realIndex = quizData.length - 1 - reverseIndex;
-                const card = document.createElement('div');
-                card.className = 'quiz-card';
-                // Чередование макета: картинка слева/справа (на мобилке верх/низ)
-                if (realIndex % 2 !== 0) card.setAttribute('data-layout', 'reverse');
+      // === ИНИЦИАЛИЗАЦИЯ ВИКТОРИНЫ ===
+      function initQuiz() {
+        const stack = document.getElementById("quiz-stack");
+        stack.innerHTML = "";
 
-                card.innerHTML = `
+        // Создаем карточки в обратном порядке для z-index
+        [...quizData].reverse().forEach((q, reverseIndex) => {
+          const realIndex = quizData.length - 1 - reverseIndex;
+          const card = document.createElement("div");
+          card.className = "quiz-card";
+          // Добавляем паттерн обёртки (pattern-1..pattern-3)
+          card.classList.add("pattern-" + ((realIndex % 3) + 1));
+          // Чередование макета: картинка слева/справа (на мобилке верх/низ)
+          if (realIndex % 2 !== 0) card.setAttribute("data-layout", "reverse");
+
+          card.innerHTML = `
                     <div class="card-content">
                         <div class="card-img">
-                            <img src="${q.img}" onerror="this.src='https://placehold.co/400x300?text=Photo+${realIndex+1}'">
+                            <img src="${
+                              q.img
+                            }" onerror="this.src='https://placehold.co/400x300?text=Photo+${
+            realIndex + 1
+          }'">
                         </div>
                         <div class="card-body">
                             <div class="question-text">${q.question}</div>
                             <div class="options">
-                                ${q.options.map((opt, i) => 
-                                    `<button class="option-btn" onclick="handleOptionClick(this, ${realIndex}, ${i})">${opt}</button>`
-                                ).join('')}
+                                ${q.options
+                                  .map(
+                                    (opt, i) =>
+                                      `<button class="option-btn" onclick="handleOptionClick(this, ${realIndex}, ${i})">${opt}</button>`
+                                  )
+                                  .join("")}
                             </div>
                         </div>
                     </div>
                     <div class="fact-overlay" id="fact-${realIndex}">
-                        <div class="fact-title">${q.fact.title}</div>
-                        <div class="fact-text">${q.fact.text}</div>
-                        <button class="next-btn" onclick="nextCard(${realIndex})">Дальше ❤️</button>
+                      <div class="fact-answer"></div>
+                      <div class="fact-title">${q.fact.title}</div>
+                      <div class="fact-text">${q.fact.text}</div>
+                      <button class="next-btn" onclick="nextCard(${realIndex})">Дальше ❤️</button>
                     </div>
                 `;
-                stack.appendChild(card);
-            });
+          stack.appendChild(card);
+        });
+      }
+
+      // Обработка ответа
+      window.handleOptionClick = function (btn, qIndex, optIndex) {
+        const isCorrect = quizData[qIndex].correct === optIndex;
+        const parent = btn.parentElement;
+
+        // Блокируем кнопки
+        const allBtns = parent.querySelectorAll(".option-btn");
+        allBtns.forEach((b) => (b.disabled = true));
+
+        if (isCorrect) {
+          btn.classList.add("correct");
+        } else {
+          btn.classList.add("wrong");
+          allBtns[quizData[qIndex].correct].classList.add("correct");
         }
 
-        // Обработка ответа
-        window.handleOptionClick = function(btn, qIndex, optIndex) {
-            const isCorrect = quizData[qIndex].correct === optIndex;
-            const parent = btn.parentElement;
-            
-            // Блокируем кнопки
-            const allBtns = parent.querySelectorAll('.option-btn');
-            allBtns.forEach(b => b.disabled = true);
+        // Показываем факт через секунду и дублируем ответ в оверлей
+        setTimeout(() => {
+          const overlay = document.getElementById(`fact-${qIndex}`);
+          if (overlay) {
+            const ansEl = overlay.querySelector(".fact-answer");
+            if (ansEl) ansEl.innerText = btn.innerText;
+            overlay.classList.add("active");
+          }
+        }, 800);
+      };
 
-            if(isCorrect) {
-                btn.classList.add('correct');
-            } else {
-                btn.classList.add('wrong');
-                allBtns[quizData[qIndex].correct].classList.add('correct');
-            }
+      // Переход к следующей карточке
+      window.nextCard = function (currentIndex) {
+        const cards = document.querySelectorAll(".quiz-card");
 
-            // Показываем факт через секунду
-            setTimeout(() => {
-                document.getElementById(`fact-${qIndex}`).classList.add('active');
-            }, 800);
+        // Попробуем безопасно найти карточку через её оверлей (fact-{index}),
+        // т.к. индексы в DOM меняются по мере удаления карточек.
+        let activeCard = null;
+        const overlay = document.getElementById(`fact-${currentIndex}`);
+        if (overlay) activeCard = overlay.closest(".quiz-card");
+
+        // Если не нашли через оверлей, попробуем старый способ, и в крайнем
+        // случае — взять верхнюю (последнюю) карточку в стеке.
+        if (!activeCard) {
+          activeCard =
+            cards[cards.length - 1 - currentIndex] || cards[cards.length - 1];
         }
 
-        // Переход к следующей карточке
-        window.nextCard = function(currentIndex) {
-            const cards = document.querySelectorAll('.quiz-card');
-            // Ищем карточку с нужным индексом в DOM (они в обратном порядке)
-            // Но проще взять последнюю в стеке (визуально первую)
-            const activeCard = cards[cards.length - 1 - currentIndex]; 
-            
-            activeCard.classList.add('swapped');
+        // Защита: если карточки нет (уже удалили/не совпал индекс),
+        // не вызываем gsap с undefined — сразу считаем викторину законченной
+        if (!activeCard) {
+          const remainingCards = document.querySelectorAll(".quiz-card");
+          if (remainingCards.length === 0) {
+            switchScreen("screen-final", startFinalAnalysis);
+            return;
+          }
+          return;
+        }
 
-            setTimeout(() => {
-                if(currentIndex < quizData.length - 1) {
-                    // Следующий вопрос
+        // Анимируем вылет текущей карточки через GSAP (плавно и живо)
+        gsap.to(activeCard, {
+          x: 1000,
+          rotation: 25,
+          scale: 0.92,
+          opacity: 0,
+          duration: 0.55,
+          ease: "power2.in",
+          onComplete: () => {
+            // Удаляем текущую карточку после анимации
+            if (activeCard && activeCard.parentNode)
+              activeCard.parentNode.removeChild(activeCard);
+
+            // Пересчитываем и анимируем оставшиеся карточки, чтобы они плавно заняли новые позиции
+            const remainingCards = document.querySelectorAll(".quiz-card");
+            if (remainingCards.length > 0) {
+              remainingCards.forEach((card, idx) => {
+                // idx 0 .. n-1, топовая карточка находится в конце коллекции
+                const posFromTop = remainingCards.length - 1 - idx;
+                let rotation = 0,
+                  y = 0,
+                  scale = 1,
+                  opacity = 1,
+                  z = 0;
+
+                if (posFromTop === 0) {
+                  rotation = 0;
+                  y = 0;
+                  scale = 1;
+                  opacity = 1;
+                  z = 3;
+                } else if (posFromTop === 1) {
+                  rotation = 3;
+                  y = 10;
+                  scale = 0.98;
+                  opacity = 0.95;
+                  z = 2;
+                } else if (posFromTop === 2) {
+                  rotation = -3;
+                  y = 20;
+                  scale = 0.96;
+                  opacity = 0.85;
+                  z = 1;
                 } else {
-                    // Викторина закончена
-                    switchScreen('screen-final', startFinalAnalysis);
+                  rotation = 2;
+                  y = 30;
+                  scale = 0.94;
+                  opacity = 0.75;
+                  z = 0;
                 }
-            }, 600);
-        }
 
-
-        // === ФИНАЛЬНЫЙ ЭКРАН ===
-        function startFinalAnalysis() {
-            const bar = document.getElementById('loading-bar');
-            const percent = document.getElementById('percent-text');
-            const analysisCont = document.getElementById('analysis-container');
-            const giftCont = document.getElementById('gift-reveal-container');
-
-            let p = 0;
-            // Фаза 1: Обычная загрузка до 100%
-            const interval = setInterval(() => {
-                p += Math.random() * 5;
-                if (p > 100) p = 100;
-                bar.style.width = p + '%';
-                percent.innerText = Math.floor(p) + '%';
-
-                if (p >= 100) {
-                    clearInterval(interval);
-                    // Фаза 2: Взрыв до 9999%
-                    setTimeout(() => {
-                        bar.classList.add('burst');
-                        percent.innerText = '9999%';
-                        
-                        // Фаза 3: Исчезновение и подарок
-                        setTimeout(() => {
-                            gsap.to(analysisCont, {
-                                opacity: 0, 
-                                duration: 0.5, 
-                                onComplete: () => {
-                                    analysisCont.style.display = 'none';
-                                    giftCont.style.display = 'flex';
-                                    gsap.from(giftCont, { opacity: 0, scale: 0.8, duration: 1, ease: "back.out" });
-                                }
-                            });
-                        }, 2000); // пауза на осознание 9999%
-                    }, 500);
-                }
-            }, 100);
-        }
-
-        window.flipGiftCard = function() {
-            const card = document.getElementById('gift-card-3d');
-            const btn = document.getElementById('more-gifts-btn');
-            
-            // Если уже перевернута - не трогаем, только кнопка может управлять
-            if(!card.classList.contains('flipped')) {
-                card.classList.add('flipped');
-                
-                // Показываем кнопку "Еще не все"
-                if(btn.style.display !== 'block') {
-                    btn.style.display = 'block';
-                    setTimeout(() => btn.style.opacity = 1, 500);
-                }
+                // Применяем плавную пружинистую анимацию
+                gsap.to(card, {
+                  rotation: rotation,
+                  y: y,
+                  scale: scale,
+                  opacity: opacity,
+                  duration: 0.8,
+                  ease: "elastic.out(1, 0.5)",
+                  onStart: () => {
+                    card.style.zIndex = z;
+                  },
+                });
+              });
             } else {
-                // Если кликнули по перевернутой карте - можно перевернуть обратно, если хочешь
-                // card.classList.remove('flipped'); 
+              // Нет больше карточек - викторина закончена
+              switchScreen("screen-final", startFinalAnalysis);
             }
-        }
+          },
+        });
+      };
 
-        window.nextGift = function(e) {
-            e.stopPropagation(); // Чтобы клик не сработал на карточку
-            const card = document.getElementById('gift-card-3d');
-            const frontText = document.getElementById('gift-front-text');
-            const img = document.getElementById('gift-img');
-            const btn = document.getElementById('more-gifts-btn');
+      // === ФИНАЛЬНЫЙ ЭКРАН ===
+      // Состояние подарков: 0 - первый подарок (показывать кнопку), 1 - второй подарок (не показывать)
+      window.giftStage = 0;
+      function startFinalAnalysis() {
+        const bar = document.getElementById("loading-bar");
+        const percent = document.getElementById("percent-text");
+        const analysisCont = document.getElementById("analysis-container");
+        const giftCont = document.getElementById("gift-reveal-container");
 
-            // 1. Закрываем карточку
-            card.classList.remove('flipped');
+        let p = 0;
+        // Фаза 1: Обычная загрузка до 100%
+        const interval = setInterval(() => {
+          p += Math.random() * 5;
+          if (p > 100) p = 100;
+          bar.style.width = p + "%";
+          percent.innerText = Math.floor(p) + "%";
 
-            // 2. Меняем контент пока она закрывается
+          if (p >= 100) {
+            clearInterval(interval);
+            // Фаза 2: Взрыв до 9999%
             setTimeout(() => {
-                frontText.innerText = "Я решил тебе подарить незабываемые впечатления...";
-                img.src = "certificate2.png";
-                btn.style.display = 'none'; // Скрываем кнопку, больше подарков нет (или добавь логику для 3-го)
-            }, 300); // Половина времени переворота
+              bar.classList.add("burst");
+              percent.innerText = "9999%";
+
+              // Фаза 3: Исчезновение и подарок
+              setTimeout(() => {
+                gsap.to(analysisCont, {
+                  opacity: 0,
+                  duration: 0.5,
+                  onComplete: () => {
+                    analysisCont.style.display = "none";
+                    giftCont.style.display = "flex";
+                    // При показе финального экрана мы считаем, что начинаем с первого подарка
+                    window.giftStage = 0;
+                    gsap.from(giftCont, {
+                      opacity: 0,
+                      scale: 0.8,
+                      duration: 1,
+                      ease: "back.out",
+                    });
+                  },
+                });
+              }, 2000); // пауза на осознание 9999%
+            }, 500);
+          }
+        }, 100);
+      }
+
+      window.flipGiftCard = function () {
+        const card = document.getElementById("gift-card-3d");
+        const btn = document.getElementById("more-gifts-btn");
+
+        // Если уже перевернута - не трогаем, только кнопка может управлять
+        if (!card.classList.contains("flipped")) {
+          card.classList.add("flipped");
+
+          // Показываем кнопку "Еще не все" ТОЛЬКО для первого подарка (giftStage === 0)
+          if (window.giftStage === 0) {
+            if (btn.style.display !== "block") {
+              btn.style.display = "block";
+              setTimeout(() => (btn.style.opacity = 1), 500);
+            }
+          }
+        } else {
+          // Если кликнули по перевернутой карте - можно перевернуть обратно, если хочешь
+          // card.classList.remove('flipped');
         }
+      };
+
+      window.nextGift = function (e) {
+        e.stopPropagation(); // Чтобы клик не сработал на карточку
+        const card = document.getElementById("gift-card-3d");
+        const frontText = document.getElementById("gift-front-text");
+        const img = document.getElementById("gift-img");
+        const btn = document.getElementById("more-gifts-btn");
+
+        // 1. Закрываем карточку
+        card.classList.remove("flipped");
+
+        // 2. Меняем контент пока она закрывается
+        setTimeout(() => {
+          frontText.innerText =
+            "Я решил тебе подарить незабываемые впечатления...";
+          img.src = "certificate2.png";
+          // Скрываем кнопку и переводим состояние на второй подарок
+          btn.style.display = "none"; // Скрываем кнопку, больше подарков нет (или добавь логику для 3-го)
+          window.giftStage = 1;
+        }, 300); // Половина времени переворота
+      };
 
       // === ЛОГИКА ПЕРЕХОДОВ (Старая) ===
       function switchScreen(nextScreenId, callback) {
@@ -739,15 +1434,24 @@
 
         // 1. Вход шторки
         tl.to(overlay, {
-          y: "0%", duration: 0.8, ease: "power2.inOut",
+          y: "0%",
+          duration: 0.8,
+          ease: "power2.inOut",
           onComplete: () => {
-            document.querySelectorAll(".screen").forEach((s) => s.classList.remove("active"));
+            document
+              .querySelectorAll(".screen")
+              .forEach((s) => s.classList.remove("active"));
             document.getElementById(nextScreenId).classList.add("active");
             if (callback) callback();
           },
         });
         // 2. Выход шторки
-        tl.to(overlay, { y: "100%", duration: 0.8, ease: "power2.inOut", delay: 0.2, });
+        tl.to(overlay, {
+          y: "100%",
+          duration: 0.8,
+          ease: "power2.inOut",
+          delay: 0.2,
+        });
         tl.set(overlay, { y: "-100%" });
       }
 
@@ -768,19 +1472,163 @@
           gsap.set("#tree-svg", { visibility: "visible", opacity: 1 });
           return;
         }
-        gsap.registerPlugin(MorphSVGPlugin, MotionPathPlugin, DrawSVGPlugin, Physics2DPlugin);
-        function r(a) { gsap.killTweensOf(a, { opacity: !0 }); gsap.fromTo(a, { opacity: 1 }, { duration: 0.07, opacity: Math.random(), repeat: -1 }); }
-        function t(a) { if (e) { a = l[d]; gsap.set(a, { x: gsap.getProperty(".pContainer", "x"), y: gsap.getProperty(".pContainer", "y"), scale: m(), }); gsap.timeline().to(a, { duration: gsap.utils.random(0.61, 6), physics2D: { velocity: gsap.utils.random(-23, 23), angle: gsap.utils.random(-180, 180), gravity: gsap.utils.random(-6, 50), }, scale: 0, rotation: gsap.utils.random(-123, 360), ease: "power1", onStart: r, onStartParams: [a], onRepeat: function (b) { gsap.set(b, { scale: m() }); }, onRepeatParams: [a], }); d++; d = 201 <= d ? 0 : d; } }
+        gsap.registerPlugin(
+          MorphSVGPlugin,
+          MotionPathPlugin,
+          DrawSVGPlugin,
+          Physics2DPlugin
+        );
+        function r(a) {
+          gsap.killTweensOf(a, { opacity: !0 });
+          gsap.fromTo(
+            a,
+            { opacity: 1 },
+            { duration: 0.07, opacity: Math.random(), repeat: -1 }
+          );
+        }
+        function t(a) {
+          if (e) {
+            a = l[d];
+            gsap.set(a, {
+              x: gsap.getProperty(".pContainer", "x"),
+              y: gsap.getProperty(".pContainer", "y"),
+              scale: m(),
+            });
+            gsap.timeline().to(a, {
+              duration: gsap.utils.random(0.61, 6),
+              physics2D: {
+                velocity: gsap.utils.random(-23, 23),
+                angle: gsap.utils.random(-180, 180),
+                gravity: gsap.utils.random(-6, 50),
+              },
+              scale: 0,
+              rotation: gsap.utils.random(-123, 360),
+              ease: "power1",
+              onStart: r,
+              onStartParams: [a],
+              onRepeat: function (b) {
+                gsap.set(b, { scale: m() });
+              },
+              onRepeatParams: [a],
+            });
+            d++;
+            d = 201 <= d ? 0 : d;
+          }
+        }
         MorphSVGPlugin.convertToPath("polygon");
-        var pContainer = document.querySelector(".pContainer"), u = document.querySelector(".mainSVG"), c = document.querySelector(".sparkle"), e = !0;
-        var n = "#E8F6F8 #ACE8F8 #F6FBFE #A2CBDC #B74551 #5DBA72 #910B28 #910B28 #446D39".split(" ");
-        var l = [], d = 0; gsap.set("#tree-svg", { visibility: "visible" }); gsap.set(c, { transformOrigin: "50% 50%", y: -100 });
-        var getPathPoints = function (a) { var b = [], f = MotionPathPlugin.getRawPath(a)[0]; f.forEach(function (v, g) { var h = {}; h.x = f[2 * g]; h.y = f[2 * g + 1]; g % 2 && b.push(h); }); return b; };
-        var q = getPathPoints(".treeBottomPath"); var mainTl = gsap.timeline({ delay: 0, repeat: 0 }); var k, m = gsap.utils.random(0.5, 3, 0.001, !0);
-        (function () { for (var a = 201; -1 < --a; ) { var b = document.createElementNS("http://www.w3.org/2000/svg", "circle"); b.setAttribute("r", gsap.utils.random(1, 3)); b.setAttribute("fill", n[a % n.length]); b.setAttribute("class", "particle"); u.appendChild(b); l.push(b); gsap.set(b, { x: -100, y: -100, transformOrigin: "50% 50%" }); } })();
-        (function () { k = gsap.timeline({ onUpdate: t }); k.to(".pContainer, .sparkle", { duration: 6, motionPath: { path: ".treePath", autoRotate: !1 }, ease: "linear", }).to(".pContainer, .sparkle", { duration: 1, onStart: function () { e = !1; }, x: q[0].x, y: q[0].y, }).to( ".pContainer, .sparkle", { duration: 2, onStart: function () { e = !0; }, motionPath: { path: ".treeBottomPath", autoRotate: !1 }, ease: "linear", }, "-=0" ).from( ".treeBottomMask", { duration: 2, drawSVG: "0% 0%", stroke: "#FFF", ease: "linear", }, "-=2" ); })();
-        mainTl.from([".treePathMask", ".treePotMask"], { drawSVG: "0% 0%", stroke: "#FFF", stagger: { each: 6 }, duration: 6, ease: "linear", }).from( ".treeStar", { duration: 3, scaleY: 0, scaleX: 0.15, transformOrigin: "50% 50%", ease: "elastic(1,0.5)", }, "-=4" ).to( ".sparkle", { duration: 3, opacity: 0, ease: "rough({strength: 2, points: 100, template: linear, taper: both, randomize: true, clamp: false})", }, "-=0" ).to( ".treeStarOutline", { duration: 1, opacity: 1, ease: "rough({strength: 2, points: 16, template: linear, taper: none, randomize: true, clamp: false})", }, "+=1" );
-        mainTl.add(k, 0); gsap.globalTimeline.timeScale(1.5);
+        var pContainer = document.querySelector(".pContainer"),
+          u = document.querySelector(".mainSVG"),
+          c = document.querySelector(".sparkle"),
+          e = !0;
+        var n =
+          "#E8F6F8 #ACE8F8 #F6FBFE #A2CBDC #B74551 #5DBA72 #910B28 #910B28 #446D39".split(
+            " "
+          );
+        var l = [],
+          d = 0;
+        gsap.set("#tree-svg", { visibility: "visible" });
+        gsap.set(c, { transformOrigin: "50% 50%", y: -100 });
+        var getPathPoints = function (a) {
+          var b = [],
+            f = MotionPathPlugin.getRawPath(a)[0];
+          f.forEach(function (v, g) {
+            var h = {};
+            h.x = f[2 * g];
+            h.y = f[2 * g + 1];
+            g % 2 && b.push(h);
+          });
+          return b;
+        };
+        var q = getPathPoints(".treeBottomPath");
+        var mainTl = gsap.timeline({ delay: 0, repeat: 0 });
+        var k,
+          m = gsap.utils.random(0.5, 3, 0.001, !0);
+        (function () {
+          for (var a = 201; -1 < --a; ) {
+            var b = document.createElementNS(
+              "http://www.w3.org/2000/svg",
+              "circle"
+            );
+            b.setAttribute("r", gsap.utils.random(1, 3));
+            b.setAttribute("fill", n[a % n.length]);
+            b.setAttribute("class", "particle");
+            u.appendChild(b);
+            l.push(b);
+            gsap.set(b, { x: -100, y: -100, transformOrigin: "50% 50%" });
+          }
+        })();
+        (function () {
+          k = gsap.timeline({ onUpdate: t });
+          k.to(".pContainer, .sparkle", {
+            duration: 6,
+            motionPath: { path: ".treePath", autoRotate: !1 },
+            ease: "linear",
+          })
+            .to(".pContainer, .sparkle", {
+              duration: 1,
+              onStart: function () {
+                e = !1;
+              },
+              x: q[0].x,
+              y: q[0].y,
+            })
+            .to(
+              ".pContainer, .sparkle",
+              {
+                duration: 2,
+                onStart: function () {
+                  e = !0;
+                },
+                motionPath: { path: ".treeBottomPath", autoRotate: !1 },
+                ease: "linear",
+              },
+              "-=0"
+            )
+            .from(
+              ".treeBottomMask",
+              { duration: 2, drawSVG: "0% 0%", stroke: "#FFF", ease: "linear" },
+              "-=2"
+            );
+        })();
+        mainTl
+          .from([".treePathMask", ".treePotMask"], {
+            drawSVG: "0% 0%",
+            stroke: "#FFF",
+            stagger: { each: 6 },
+            duration: 6,
+            ease: "linear",
+          })
+          .from(
+            ".treeStar",
+            {
+              duration: 3,
+              scaleY: 0,
+              scaleX: 0.15,
+              transformOrigin: "50% 50%",
+              ease: "elastic(1,0.5)",
+            },
+            "-=4"
+          )
+          .to(
+            ".sparkle",
+            {
+              duration: 3,
+              opacity: 0,
+              ease: "rough({strength: 2, points: 100, template: linear, taper: both, randomize: true, clamp: false})",
+            },
+            "-=0"
+          )
+          .to(
+            ".treeStarOutline",
+            {
+              duration: 1,
+              opacity: 1,
+              ease: "rough({strength: 2, points: 16, template: linear, taper: none, randomize: true, clamp: false})",
+            },
+            "+=1"
+          );
+        mainTl.add(k, 0);
+        gsap.globalTimeline.timeScale(1.5);
       }
     </script>
   </body>
