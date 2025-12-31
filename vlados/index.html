@@ -1,0 +1,771 @@
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
+    <title>С Новым Годом!</title>
+    <!-- Подключаем новогодние шрифты -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Caveat:wght@700&family=Sofia&display=swap"
+      rel="stylesheet"
+    />
+    <!-- Библиотека для конфетти -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+    <style>
+      :root {
+        --background: #091612;
+        --base-rim: #9d2535;
+        --base-dark: #5e1620;
+        --glass: #ebeaf0;
+        --glass-border: #d7d5e1;
+        --green: #0f2620;
+        --green1: #1a4237;
+        --green2: #265f50;
+        --green3: #317c69;
+        --snow: #ffffff;
+        --text-color: #ebeaf0;
+        --accent-red: #ff3b3b;
+      }
+
+      body {
+        background-color: var(--background);
+        height: 100vh;
+        width: 100vw;
+        overflow: hidden;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin: 0;
+        font-family: "Caveat", cursive; /* Поддержка кириллицы */
+      }
+
+      /* --- UI Layers --- */
+      #permission-layer {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.9);
+        z-index: 9999;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        color: white;
+        text-align: center;
+      }
+
+      .start-btn {
+        padding: 15px 30px;
+        font-size: 24px;
+        background: var(--base-rim);
+        color: white;
+        border: none;
+        border-radius: 50px;
+        margin-top: 20px;
+        cursor: pointer;
+        font-family: "Caveat", cursive;
+        animation: pulse 2s infinite;
+      }
+
+      /* --- SCENE 1: SNOW GLOBE --- */
+      #scene-globe {
+        display: flex; /* Скрывается JS-ом */
+        flex-direction: column;
+        position: relative;
+        align-items: center;
+        transform: scale(0.9); /* Чуть уменьшаем для мобилок */
+        transition: opacity 0.5s;
+
+      }
+
+      #c1,
+      #c2 {
+        position: absolute;
+        top: 0;
+        left: 0;
+        height: 300px;
+        width: 300px;
+        border-radius: 50%;
+        pointer-events: none;
+        transform: translateX(8px);
+
+      }
+      #c1 {
+        z-index: -11;
+      }
+      #c2 {
+        z-index: 1000;
+      }
+
+      .snowglobe {
+        height: 300px;
+        width: 300px;
+        border-radius: 50%;
+        background-color: var(--glass);
+        border: 2px solid var(--glass-border);
+        z-index: -30;
+        position: relative;
+        transform: translateX(-25px);
+      }
+
+      .snowglobe:before {
+        position: absolute;
+        content: "";
+        height: 280px;
+        width: 280px;
+        border-radius: 50%;
+        top: 10px;
+        left: 10px;
+        background: var(--snow);
+      }
+
+      .snowglobe:after {
+        position: absolute;
+        content: "";
+        height: 280px;
+        width: 290px;
+        border-radius: 50%;
+        top: 17px;
+        background: var(--glass);
+      }
+
+      .base {
+        position: relative;
+        border-bottom: 50px solid var(--base-dark);
+        border-left: 10px solid transparent;
+        border-right: 10px solid transparent;
+        height: 0;
+        width: 242px;
+        margin-top: -60px;
+        z-index: -10;
+      }
+
+      .base:after {
+        position: absolute;
+        content: "";
+        top: 25px;
+        left: -10px;
+        width: 262px;
+        height: 50px;
+        border-radius: 125px / 25px;
+        background: var(--base-dark);
+      }
+
+      .baseTop {
+        background-color: var(--snow);
+        width: 242px;
+        height: 40px;
+        border-radius: 125px / 20px;
+        margin-top: -72px;
+        box-sizing: border-box;
+        border-bottom: 8px solid var(--glass);
+        z-index: -10;
+      }
+
+      .baseShadow {
+        position: absolute;
+        background-color: var(--base-rim);
+        width: 275px;
+        height: 60px;
+        border-radius: 130px / 30px;
+        top: 270px;
+        z-index: -40;
+      }
+
+      /* Trees logic */
+      .tree,
+      .tree2,
+      .tree3,
+      .tree4 {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-32px, -102px);
+      }
+
+      .tree {
+        width: 0;
+        height: 0;
+        border-left: 20px solid transparent;
+        border-bottom: 70px solid var(--green3);
+        margin-top: 67px;
+        margin-left: -80px;
+      }
+      .tree:after {
+        position: absolute;
+        content: "";
+        width: 0;
+        height: 0;
+        border-right: 20px solid transparent;
+        border-bottom: 70px solid var(--green2);
+      }
+
+      .tree4 {
+        width: 0;
+        height: 0;
+        border-left: 30px solid transparent;
+        border-right: 30px solid transparent;
+        border-bottom: 100px solid var(--green1);
+        margin-top: 65px;
+        margin-left: -50px;
+      }
+      .tree4:after {
+        position: absolute;
+        content: "";
+        width: 0;
+        height: 0;
+        border-right: 30px solid transparent;
+        border-bottom: 100px solid var(--green);
+      }
+
+      .tree2 {
+        width: 0;
+        height: 0;
+        border-left: 20px solid transparent;
+        border-right: 20px solid transparent;
+        border-bottom: 70px solid var(--green1);
+        margin-top: 67px;
+        margin-left: 70px;
+      }
+      .tree2:after {
+        position: absolute;
+        content: "";
+        width: 0;
+        height: 0;
+        border-right: 20px solid transparent;
+        border-bottom: 70px solid var(--green);
+      }
+
+      .tree3 {
+        width: 0;
+        height: 0;
+        border-left: 20px solid transparent;
+        border-bottom: 80px solid var(--green2);
+        margin-top: 69px;
+        margin-left: -20px;
+      }
+      .tree3:after {
+        position: absolute;
+        content: "";
+        width: 0;
+        height: 0;
+        border-right: 20px solid transparent;
+        border-bottom: 80px solid var(--green3);
+      }
+
+      /* --- Instruction Text --- */
+      #shake-instruction {
+        margin-top: 40px;
+        color: var(--snow);
+        font-size: 32px;
+        text-align: center;
+        line-height: 1.2;
+        text-transform: uppercase;
+        text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+        transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        padding: 0 20px;
+        min-height: 80px;
+      }
+
+      .text-stage-1 {
+        font-size: 32px;
+      }
+      .text-stage-2 {
+        font-size: 42px;
+        color: #ffeb3b;
+      }
+      .text-stage-3 {
+        font-size: 50px;
+        color: var(--accent-red);
+        text-shadow: 0 0 20px red;
+        animation: shakeText 0.1s infinite;
+      }
+
+      @keyframes shakeText {
+        0% {
+          transform: translate(1px, 1px) rotate(0deg);
+        }
+        10% {
+          transform: translate(-1px, -2px) rotate(-1deg);
+        }
+        20% {
+          transform: translate(-3px, 0px) rotate(1deg);
+        }
+        30% {
+          transform: translate(3px, 2px) rotate(0deg);
+        }
+        40% {
+          transform: translate(1px, -1px) rotate(1deg);
+        }
+        50% {
+          transform: translate(-1px, 2px) rotate(-1deg);
+        }
+        60% {
+          transform: translate(-3px, 1px) rotate(0deg);
+        }
+        70% {
+          transform: translate(3px, 1px) rotate(-1deg);
+        }
+        80% {
+          transform: translate(-1px, -1px) rotate(1deg);
+        }
+        90% {
+          transform: translate(1px, 2px) rotate(0deg);
+        }
+        100% {
+          transform: translate(1px, -2px) rotate(-1deg);
+        }
+      }
+
+      @keyframes pulse {
+        0% {
+          transform: scale(1);
+        }
+        50% {
+          transform: scale(1.05);
+        }
+        100% {
+          transform: scale(1);
+        }
+      }
+
+      /* --- EXPLOSION --- */
+      #explosion-overlay {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        width: 0;
+        height: 0;
+        background: white;
+        border-radius: 50%;
+        transform: translate(-50%, -50%);
+        z-index: 5000;
+        pointer-events: none;
+      }
+      .explode-anim {
+        animation: explode 0.8s forwards ease-in;
+      }
+      @keyframes explode {
+        0% {
+          width: 0;
+          height: 0;
+          opacity: 1;
+        }
+        50% {
+          opacity: 1;
+        }
+        100% {
+          width: 300vmax;
+          height: 300vmax;
+          opacity: 1;
+        }
+      }
+
+      /* --- SCENE 2: CARD --- */
+      #scene-card {
+        display: none; /* Initially hidden */
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: #f0f0f5; /* Neutral new background */
+        justify-content: center;
+        align-items: center;
+        z-index: 6000;
+        opacity: 0;
+        transition: opacity 1s;
+      }
+
+      .card-container {
+        perspective: 1000px;
+        width: min(92vw, 420px);
+        height: calc(
+          80vh - 40px
+        ); /* full-ish viewport height with small margin */
+        max-height: 80vh;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .card-inner {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        text-align: center;
+        transition: transform 0.8s;
+        transform-style: preserve-3d;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        border-radius: 20px;
+      }
+
+      .card-flipped .card-inner {
+        transform: rotateY(180deg);
+      }
+
+      .card-front,
+      .card-back {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        -webkit-backface-visibility: hidden;
+        backface-visibility: hidden;
+        border-radius: 20px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        padding: 20px;
+        box-sizing: border-box;
+      }
+
+      .card-front {
+        background: linear-gradient(135deg, #fff, #f8f8f8);
+        color: #333;
+        border: 5px solid var(--base-rim);
+      }
+
+      .card-back {
+        background-color: #fff;
+        color: white;
+        transform: rotateY(180deg);
+        background-size: cover;
+        background-position: center;
+        border: 5px solid var(--green2);
+        overflow: hidden;
+      }
+
+      .card-back img {
+        display: block;
+        max-width: 100%;
+        max-height: 100%;
+        width: auto;
+        height: auto;
+        object-fit: contain; /* preserve aspect ratio, show full image */
+        border-radius: 15px;
+        margin: 0 auto;
+      }
+
+      .card-title {
+        font-size: 32px;
+        margin-bottom: 20px;
+        color: var(--base-dark);
+        line-height: 1.1;
+      }
+
+      .card-msg {
+        font-size: 24px;
+        color: #555;
+      }
+
+      .card-hint {
+        margin-top: 40px;
+        font-size: 16px;
+        color: #999;
+        font-family: sans-serif;
+        animation: pulse 1s infinite;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- СЛОЙ РАЗРЕШЕНИЯ (Для iOS 13+) -->
+    <div id="permission-layer">
+      <h2>🎄 Новогодний Сюрприз 🎄</h2>
+      <p>Для магии мне нужен доступ к датчикам движения твоего телефона.</p>
+      <button class="start-btn" id="btn-start">Включить магию ✨</button>
+    </div>
+
+    <!-- СЦЕНА 1: ШАР -->
+    <div id="scene-globe">
+      <div class="container">
+        <canvas id="c1"></canvas>
+        <canvas id="c2"></canvas>
+        <div class="snowglobe"></div>
+        <div class="base"></div>
+        <div class="baseTop"></div>
+        <div class="baseShadow"></div>
+
+        <!-- Елки внутри шара -->
+        <div class="tree"></div>
+        <div class="tree2"></div>
+        <div class="tree3"></div>
+        <div class="tree4"></div>
+      </div>
+
+      <div id="shake-instruction" class="text-stage-1">
+        СИЛЬНО ПОТРЯСИ ШАР, Владос!
+      </div>
+    </div>
+
+    <!-- ЭФФЕКТ ВЗРЫВА -->
+    <div id="explosion-overlay"></div>
+
+    <!-- СЦЕНА 2: КАРТОЧКА -->
+    <div id="scene-card">
+      <div class="card-container" onclick="flipCard()">
+        <div class="card-inner" id="card-inner">
+          <div class="card-front">
+            <div class="card-title">Поздравляю тебя с Новым Годом!</div>
+            <div class="card-msg">
+              Вот твой подарок!<br />
+              Твой американский фрэнд, Никита! ❤️
+            </div>
+            <div class="card-hint">(нажми, чтобы перевернуть)</div>
+          </div>
+          <div class="card-back">
+            <!-- Замените src на реальный путь к present_het.png -->
+            <img
+              src="/vlados/present_vlad.png"
+              alt="Подарок"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // --- 1. SNOW GLOBE ANIMATION (Canvas) ---
+      (function () {
+        var c1 = document.getElementById("c1");
+        var c2 = document.getElementById("c2");
+        var ctx1 = c1.getContext("2d");
+        var ctx2 = c2.getContext("2d");
+        c1.height = 300;
+        c1.width = 300;
+        c2.height = 300;
+        c2.width = 300;
+
+        ctx1.fillStyle = "white";
+        ctx2.fillStyle = "white";
+        var c1Flakes = [];
+        var c2Flakes = [];
+
+        function Flake(r) {
+          this.x = Math.random() * 300;
+          this.y = Math.random() * 250;
+          this.r = r;
+        }
+
+        for (var i = 0; i <= 80; i++) {
+          c1Flakes.push(new Flake(2));
+        }
+        for (var i = 0; i <= 80; i++) {
+          c2Flakes.push(new Flake(3));
+        }
+
+        function render() {
+          ctx1.clearRect(0, 0, 300, 300);
+          ctx2.clearRect(0, 0, 300, 300);
+
+          for (var i = 0; i < c1Flakes.length; i++) {
+            ctx1.beginPath();
+            ctx1.arc(
+              c1Flakes[i].x,
+              c1Flakes[i].y,
+              c1Flakes[i].r,
+              0,
+              Math.PI * 2
+            );
+            ctx1.fill();
+            if (c1Flakes[i].y <= 245) c1Flakes[i].y += 0.3;
+            else c1Flakes[i].y = 0;
+          }
+
+          for (var i = 0; i < c2Flakes.length; i++) {
+            ctx2.beginPath();
+            ctx2.arc(
+              c2Flakes[i].x,
+              c2Flakes[i].y,
+              c2Flakes[i].r,
+              0,
+              Math.PI * 2
+            );
+            ctx2.fill();
+            if (c2Flakes[i].y <= 245) c2Flakes[i].y += 0.6;
+            else c2Flakes[i].y = 0;
+          }
+          requestAnimationFrame(render);
+        }
+        render();
+      })();
+
+      // --- 2. GAME LOGIC & SHAKE DETECTION ---
+      let shakeCount = 0;
+      let lastShakeTime = 0;
+      const shakeThreshold = 25; // Чувствительность (чем больше, тем сильнее надо трясти)
+      const instructionEl = document.getElementById("shake-instruction");
+      let isExploded = false;
+
+      // Инициализация по кнопке (для разрешений)
+      document
+        .getElementById("btn-start")
+        .addEventListener("click", async () => {
+          // Проверка для iOS 13+
+          if (
+            typeof DeviceMotionEvent !== "undefined" &&
+            typeof DeviceMotionEvent.requestPermission === "function"
+          ) {
+            try {
+              const permissionState =
+                await DeviceMotionEvent.requestPermission();
+              if (permissionState === "granted") {
+                startListening();
+              } else {
+                alert("Нужен доступ к датчикам, чтобы трясти шар!");
+              }
+            } catch (e) {
+              alert("Ошибка датчиков: " + e);
+            }
+          } else {
+            // Для Android и старых iOS
+            startListening();
+          }
+        });
+
+      function startListening() {
+        document.getElementById("permission-layer").style.display = "none";
+        window.addEventListener("devicemotion", handleMotion, true);
+      }
+
+      function handleMotion(event) {
+        if (isExploded) return;
+
+        const current = event.accelerationIncludingGravity;
+        if (!current) return;
+
+        // Вычисляем силу тряски (вектор)
+        const acc = Math.sqrt(
+          current.x * current.x + current.y * current.y + current.z * current.z
+        );
+
+        // Отнимаем гравитацию (~9.8) грубо, чтобы понять именно рывок
+        const cleanAcc = Math.abs(acc - 9.8);
+
+        const now = Date.now();
+
+        // Дебаунс (чтобы одна тряска не считалась за 10)
+        if (cleanAcc > shakeThreshold && now - lastShakeTime > 800) {
+          lastShakeTime = now;
+          shakeCount++;
+          updateGameState();
+        }
+      }
+
+      function updateGameState() {
+        // Вибрация телефона при успешной тряске
+        if (navigator.vibrate) navigator.vibrate(200);
+
+        if (shakeCount === 1) {
+          instructionEl.innerHTML = "СИЛЬНЕЕ!";
+          instructionEl.className = ""; // сброс
+          instructionEl.classList.add("text-stage-2");
+        } else if (shakeCount === 2) {
+          instructionEl.innerHTML = "ЕЩЕ СИЛЬНЕЕЕ!";
+          instructionEl.className = "";
+          instructionEl.classList.add("text-stage-3");
+        } else if (shakeCount >= 3) {
+          doExplosion();
+        }
+      }
+
+      // --- 3. TRANSITION & EXPLOSION ---
+      function doExplosion() {
+        isExploded = true;
+        window.removeEventListener("devicemotion", handleMotion);
+
+        const explosion = document.getElementById("explosion-overlay");
+        const globeScene = document.getElementById("scene-globe");
+        const cardScene = document.getElementById("scene-card");
+
+        // 1. Анимация белого круга
+        explosion.classList.add("explode-anim");
+
+        // 2. В момент полного белого экрана меняем сцены
+        setTimeout(() => {
+          globeScene.style.display = "none";
+          cardScene.style.display = "flex";
+
+          // Плавное появление карточки
+          setTimeout(() => {
+            cardScene.style.opacity = "1";
+          }, 100);
+        }, 600); // Чуть раньше конца анимации взрыва
+      }
+
+      // --- 4. CARD FLIP & CONFETTI ---
+      let hasFlipped = false;
+
+      window.flipCard = function () {
+        const cardInner = document.getElementById("card-inner");
+
+        // Переворот
+        cardInner.parentElement.classList.toggle("card-flipped");
+
+        // Запуск салюта только при первом просмотре задника (или при каждом, как хотите. Сейчас при каждом "повороте на лицо")
+        // Логика: если мы сейчас видим front, то клик покажет back -> запускаем салют
+        const isShowingBack =
+          cardInner.parentElement.classList.contains("card-flipped");
+
+        if (isShowingBack) {
+          launchFireworks();
+        }
+      };
+
+      function launchFireworks() {
+        var duration = 5 * 1000; // 5 секунд салюта
+        var animationEnd = Date.now() + duration;
+        var defaults = {
+          startVelocity: 30,
+          spread: 360,
+          ticks: 60,
+          zIndex: 7000,
+        };
+
+        function randomInRange(min, max) {
+          return Math.random() * (max - min) + min;
+        }
+
+        var interval = setInterval(function () {
+          var timeLeft = animationEnd - Date.now();
+
+          if (timeLeft <= 0) {
+            return clearInterval(interval);
+          }
+
+          var particleCount = 50 * (timeLeft / duration);
+
+          // Firework 1
+          confetti(
+            Object.assign({}, defaults, {
+              particleCount,
+              origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 },
+            })
+          );
+
+          // Firework 2
+          confetti(
+            Object.assign({}, defaults, {
+              particleCount,
+              origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 },
+            })
+          );
+        }, 250);
+      }
+
+      // Для теста на компьютере (если нет сенсоров)
+      // Двойной клик по шару имитирует тряску
+      document.querySelector(".snowglobe").addEventListener("dblclick", () => {
+        shakeCount++;
+        updateGameState();
+      });
+    </script>
+  </body>
+</html>
