@@ -1471,12 +1471,8 @@
           gsap.set("#tree-svg", { visibility: "visible", opacity: 1 });
           return;
         }
-        gsap.registerPlugin(
-          MorphSVGPlugin,
-          MotionPathPlugin,
-          DrawSVGPlugin,
-          Physics2DPlugin
-        );
+        // Physics2DPlugin is a paid GSAP plugin. Use free custom kinematics instead.
+        gsap.registerPlugin(MorphSVGPlugin, MotionPathPlugin, DrawSVGPlugin);
         function r(a) {
           gsap.killTweensOf(a, { opacity: !0 });
           gsap.fromTo(
@@ -1493,22 +1489,32 @@
               y: gsap.getProperty(".pContainer", "y"),
               scale: m(),
             });
-            gsap.timeline().to(a, {
-              duration: gsap.utils.random(0.61, 6),
-              physics2D: {
-                velocity: gsap.utils.random(-23, 23),
-                angle: gsap.utils.random(-180, 180),
-                gravity: gsap.utils.random(-6, 50),
-              },
+            // Free replacement for Physics2DPlugin: calculate final position
+            // using simple kinematics and animate with GSAP. This avoids paid plugins.
+            var dur = gsap.utils.random(0.61, 6);
+            var velocity = gsap.utils.random(5, 60); // px/sec-ish (tunable)
+            var angle = gsap.utils.random(-180, 180) * (Math.PI / 180);
+            var gravity = gsap.utils.random(-6, 50); // px/sec^2-ish
+
+            var startX = gsap.getProperty('.pContainer', 'x') || 0;
+            var startY = gsap.getProperty('.pContainer', 'y') || 0;
+
+            var vx = velocity * Math.cos(angle);
+            var vy = velocity * Math.sin(angle);
+
+            // kinematic final positions after `dur` seconds
+            var finalX = startX + vx * dur;
+            var finalY = startY + vy * dur + 0.5 * gravity * dur * dur;
+
+            gsap.to(a, {
+              duration: dur,
+              x: finalX,
+              y: finalY,
               scale: 0,
               rotation: gsap.utils.random(-123, 360),
-              ease: "power1",
+              ease: 'power1',
               onStart: r,
               onStartParams: [a],
-              onRepeat: function (b) {
-                gsap.set(b, { scale: m() });
-              },
-              onRepeatParams: [a],
             });
             d++;
             d = 201 <= d ? 0 : d;
