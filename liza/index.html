@@ -1496,8 +1496,8 @@
             var angle = gsap.utils.random(-180, 180) * (Math.PI / 180);
             var gravity = gsap.utils.random(-6, 50); // px/sec^2-ish
 
-            var startX = gsap.getProperty('.pContainer', 'x') || 0;
-            var startY = gsap.getProperty('.pContainer', 'y') || 0;
+            var startX = gsap.getProperty(".pContainer", "x") || 0;
+            var startY = gsap.getProperty(".pContainer", "y") || 0;
 
             var vx = velocity * Math.cos(angle);
             var vy = velocity * Math.sin(angle);
@@ -1512,7 +1512,7 @@
               y: finalY,
               scale: 0,
               rotation: gsap.utils.random(-123, 360),
-              ease: 'power1',
+              ease: "power1",
               onStart: r,
               onStartParams: [a],
             });
